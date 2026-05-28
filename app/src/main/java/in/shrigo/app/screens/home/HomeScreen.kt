@@ -120,85 +120,129 @@ fun SearchRideCard() {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
-        shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(8.dp)
+            .padding(
+                horizontal = 16.dp,
+                vertical = 8.dp
+            ),
+
+        shape = RoundedCornerShape(16.dp),
+
+        elevation =
+            CardDefaults.cardElevation(
+                defaultElevation = 4.dp
+            )
     ) {
 
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier
+                .padding(14.dp)
         ) {
 
             Text(
                 text = "Find Your Ride",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
+                style =
+                    MaterialTheme
+                        .typography
+                        .titleMedium,
+
+                fontWeight =
+                    FontWeight.Bold
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(
+                modifier =
+                    Modifier.height(10.dp)
+            )
 
-            OutlinedTextField(
-                value = "",
-                onValueChange = {},
-                label = { Text("From") },
-                leadingIcon = {
-                    Icon(
-                        Icons.Default.LocationOn,
-                        contentDescription = null
+            Row(
+                modifier =
+                    Modifier.fillMaxWidth(),
+
+                horizontalArrangement =
+                    Arrangement.spacedBy(
+                        8.dp
                     )
-                },
-                modifier = Modifier.fillMaxWidth()
+            ) {
+
+                OutlinedTextField(
+                    value = "",
+                    onValueChange = {},
+
+                    label = {
+                        Text("From")
+                    },
+
+                    leadingIcon = {
+                        Icon(
+                            Icons.Default.LocationOn,
+                            contentDescription = null
+                        )
+                    },
+
+                    modifier =
+                        Modifier.weight(1f),
+
+                    singleLine = true
+                )
+
+                OutlinedTextField(
+                    value = "",
+                    onValueChange = {},
+
+                    label = {
+                        Text("To")
+                    },
+
+                    leadingIcon = {
+                        Icon(
+                            Icons.Default.LocationOn,
+                            contentDescription = null
+                        )
+                    },
+
+                    modifier =
+                        Modifier.weight(1f),
+
+                    singleLine = true
+                )
+            }
+
+            Spacer(
+                modifier =
+                    Modifier.height(12.dp)
             )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            OutlinedTextField(
-                value = "",
-                onValueChange = {},
-                label = { Text("To") },
-                leadingIcon = {
-                    Icon(
-                        Icons.Default.LocationOn,
-                        contentDescription = null
-                    )
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            OutlinedTextField(
-                value = "",
-                onValueChange = {},
-                label = { Text("Date") },
-                leadingIcon = {
-                    Icon(
-                        Icons.Default.DateRange,
-                        contentDescription = null
-                    )
-                },
-                modifier = Modifier.fillMaxWidth()
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = {},
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF2E7D32)
-                ),
-                shape = RoundedCornerShape(14.dp)
+
+                modifier =
+                    Modifier.fillMaxWidth(),
+
+                colors =
+                    ButtonDefaults
+                        .buttonColors(
+                            containerColor =
+                                Color(0xFF2E7D32)
+                        ),
+
+                shape =
+                    RoundedCornerShape(
+                        12.dp
+                    )
             ) {
 
                 Icon(
                     Icons.Default.Search,
-                    contentDescription = null
+                    contentDescription =
+                        null
                 )
 
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(
+                    modifier =
+                        Modifier.width(6.dp)
+                )
 
-                Text("Find Ride")
+                Text("Search Ride")
             }
         }
     }
