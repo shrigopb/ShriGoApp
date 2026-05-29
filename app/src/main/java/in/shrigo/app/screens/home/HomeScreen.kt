@@ -22,6 +22,14 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import `in`.shrigo.app.models.Ride
 import `in`.shrigo.app.screens.home.HomeViewModel
+import androidx.compose.material.icons.filled.AirplanemodeActive
+import androidx.compose.material.icons.filled.People
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.material.icons.filled.Call
+import androidx.compose.ui.platform.LocalContext
+import java.time.format.DateTimeFormatter
+import java.time.LocalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -320,95 +328,387 @@ fun RideCard(
     ride: Ride
 ) {
 
+    val context =
+        LocalContext.current
+
     Card(
+
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
-        shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(6.dp)
+            .padding(
+                horizontal = 16.dp,
+                vertical = 8.dp
+            ),
+
+        shape =
+            RoundedCornerShape(
+                20.dp
+            ),
+
+        elevation =
+            CardDefaults.cardElevation(
+                defaultElevation = 6.dp
+            )
+
     ) {
 
         Column(
-            modifier = Modifier.padding(16.dp)
+
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(18.dp)
+
         ) {
 
+            // SOURCE
             Text(
+
                 text =
-                    "${ride.rideSource ?: "Unknown"} → " +
-                            "${ride.rideDesti ?: "Unknown"}",
+                    ride.rideSource
+                        ?: "Unknown",
 
                 style =
                     MaterialTheme
                         .typography
-                        .titleMedium,
+                        .titleLarge,
 
                 fontWeight =
                     FontWeight.Bold
             )
 
+            Spacer(
+                modifier =
+                    Modifier.height(
+                        4.dp
+                    )
+            )
+            val formattedTime = try {
+
+                val startTime =
+
+                    LocalTime.parse(
+                        ride.rideTime.toString()
+                    )
+
+                val endTime =
+
+                    startTime.plusHours(
+                        2
+                    )
+
+                val formatter =
+
+                    DateTimeFormatter
+                        .ofPattern(
+                            "hh:mm a"
+                        )
+
+                "${startTime.format(formatter)}" +
+                        " - " +
+                        "${endTime.format(formatter)}"
+
+            } catch (e: Exception) {
+
+                "-"
+            }
+            // DATE + TIME
             Text(
+
                 text =
-                    "Via: ${
-                        ride.rideVia ?: "-"
-                    }"
+                    "${ride.rideDate ?: "-"} • $formattedTime",
+
+                style =
+                    MaterialTheme
+                        .typography
+                        .bodySmall,
+
+                color =
+                    Color(0xFF2E7D32),
+
+                fontWeight =
+                    FontWeight.SemiBold
             )
 
-            Text(
-                text =
-                    "Time: ${
-                        ride.rideTime ?: "-"
-                    }"
+            Spacer(
+                modifier =
+                    Modifier.height(
+                        16.dp
+                    )
             )
 
-            Text(
-                text =
-                    "Date: ${
-                        ride.rideDate ?: "-"
-                    }"
+            HorizontalDivider()
+
+            Spacer(
+                modifier =
+                    Modifier.height(
+                        14.dp
+                    )
             )
 
-            Text(
-                text =
-                    "Seats Available: ${
-                        ride.rideSeats ?: "0"
-                    }"
-            )
-
-            Text(
-                text =
-                    ride.driverFirstName
-                        ?: "Driver"
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
+            // VIA + PRICE
             Row(
-                modifier = Modifier.fillMaxWidth(),
+
+                modifier =
+                    Modifier.fillMaxWidth(),
+
+                horizontalArrangement =
+                    Arrangement.SpaceBetween
+            ) {
+
+                Column {
+
+                    Text(
+                        text = "Via",
+
+                        style =
+                            MaterialTheme
+                                .typography
+                                .bodySmall,
+
+                        color =
+                            Color.Gray
+                    )
+
+                    Text(
+
+                        text =
+                            ride.rideVia
+                                ?: "-",
+
+                        fontWeight =
+                            FontWeight.Medium
+                    )
+                }
+
+                Column(
+                    horizontalAlignment =
+                        Alignment.End
+                ) {
+
+                    Text(
+                        text = "Price",
+
+                        style =
+                            MaterialTheme
+                                .typography
+                                .bodySmall,
+
+                        color =
+                            Color.Gray
+                    )
+
+                    Text(
+
+                        text =
+                            "₹${ride.ridePrice ?: "0"} /seat",
+
+                        color =
+                            Color(0xFF2E7D32),
+
+                        fontWeight =
+                            FontWeight.Bold,
+
+                        style =
+                            MaterialTheme
+                                .typography
+                                .titleMedium
+                    )
+                }
+            }
+
+            Spacer(
+                modifier =
+                    Modifier.height(
+                        14.dp
+                    )
+            )
+
+            HorizontalDivider()
+
+            Spacer(
+                modifier =
+                    Modifier.height(
+                        14.dp
+                    )
+            )
+
+            // DESTINATION + SEATS
+            Row(
+
+                modifier =
+                    Modifier.fillMaxWidth(),
+
                 horizontalArrangement =
                     Arrangement.SpaceBetween,
+
                 verticalAlignment =
                     Alignment.CenterVertically
             ) {
 
+                Row(
+                    verticalAlignment =
+                        Alignment.CenterVertically
+                ) {
+
+                    Icon(
+                        imageVector =
+                            Icons.Default
+                                .AirplanemodeActive,
+
+                        contentDescription =
+                            null,
+
+                        tint =
+                            Color(
+                                0xFF0288D1
+                            )
+                    )
+
+                    Spacer(
+                        modifier =
+                            Modifier.width(
+                                8.dp
+                            )
+                    )
+
+                    Text(
+
+                        text =
+                            ride.rideDesti
+                                ?: "Unknown"
+                    )
+                }
+
+                Row(
+                    verticalAlignment =
+                        Alignment.CenterVertically
+                ) {
+
+                    Icon(
+                        imageVector =
+                            Icons.Default
+                                .People,
+
+                        contentDescription =
+                            null,
+
+                        tint =
+                            Color.Gray
+                    )
+
+                    Spacer(
+                        modifier =
+                            Modifier.width(
+                                4.dp
+                            )
+                    )
+
+                    Text(
+
+                        text =
+                            "${ride.rideSeats ?: "0"} Seats"
+                    )
+                }
+            }
+
+            Spacer(
+                modifier =
+                    Modifier.height(
+                        18.dp
+                    )
+            )
+
+            // BOOK BUTTON
+            Button(
+
+                onClick = {
+
+                },
+
+                modifier =
+                    Modifier
+                        .fillMaxWidth(),
+
+                colors =
+                    ButtonDefaults
+                        .buttonColors(
+
+                            containerColor =
+                                Color(
+                                    0xFF2196F3
+                                )
+                        ),
+
+                shape =
+                    RoundedCornerShape(
+                        12.dp
+                    )
+            ) {
+
                 Text(
-                    text = "₹${ride.ridePrice}",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFFFF6F00)
+                    "Book Ride"
+                )
+            }
+
+            Spacer(
+                modifier =
+                    Modifier.height(
+                        10.dp
+                    )
+            )
+
+            // CALL DRIVER BUTTON
+            OutlinedButton(
+
+                onClick = {
+
+                    val intent = Intent(
+
+                        Intent.ACTION_DIAL,
+
+                        Uri.parse(
+                            "tel:${
+                                ride.driverContact
+                                    ?: ""
+                            }"
+                        )
+                    )
+
+                    context.startActivity(
+                        intent
+                    )
+                },
+
+                modifier =
+                    Modifier.fillMaxWidth(),
+
+                shape =
+                    RoundedCornerShape(
+                        14.dp
+                    )
+            ) {
+
+                Icon(
+
+                    imageVector =
+                        Icons.Default.Call,
+
+                    contentDescription =
+                        "Call Driver"
                 )
 
-                Button(
-                    onClick = {
-
-                    },
-                    colors = ButtonDefaults
-                        .buttonColors(
-                            containerColor =
-                                Color(0xFF2E7D32)
+                Spacer(
+                    modifier =
+                        Modifier.width(
+                            8.dp
                         )
-                ) {
-                    Text("Book Ride")
-                }
+                )
+
+                Text(
+                    text =
+                        "Call Driver"
+                )
             }
         }
     }
