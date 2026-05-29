@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import `in`.shrigo.app.R
+import `in`.shrigo.app.navigation.Routes
 import kotlinx.coroutines.delay
 
 @Composable
@@ -34,19 +35,34 @@ fun SplashScreen(
     }
 
     val scaleAnimation by animateFloatAsState(
-        targetValue = if (startAnimation) 1f else 0.8f,
+
+        targetValue =
+            if (startAnimation)
+                1f
+            else
+                0.8f,
+
         animationSpec = tween(
             durationMillis = 1200,
-            easing = FastOutSlowInEasing
+            easing =
+                FastOutSlowInEasing
         ),
+
         label = ""
     )
 
     val alphaAnimation by animateFloatAsState(
-        targetValue = if (startAnimation) 1f else 0f,
+
+        targetValue =
+            if (startAnimation)
+                1f
+            else
+                0f,
+
         animationSpec = tween(
             durationMillis = 1500
         ),
+
         label = ""
     )
 
@@ -56,63 +72,135 @@ fun SplashScreen(
 
         delay(2500)
 
-        navController.navigate("home") {
-            popUpTo("splash") {
+        navController.navigate(
+
+            "${Routes.HOME}/Guest"
+
+        ) {
+
+            popUpTo(
+                Routes.SPLASH
+            ) {
+
                 inclusive = true
             }
+
+            launchSingleTop = true
         }
     }
 
     Box(
+
         modifier = Modifier
             .fillMaxSize()
             .background(
-                brush = Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF0F172A),
-                        Color(0xFF1E293B),
-                        Color(0xFF2E7D32)
+
+                brush =
+                    Brush.verticalGradient(
+
+                        colors = listOf(
+
+                            Color(
+                                0xFF0F172A
+                            ),
+
+                            Color(
+                                0xFF1E293B
+                            ),
+
+                            Color(
+                                0xFF2E7D32
+                            )
+                        )
                     )
-                )
             ),
-        contentAlignment = Alignment.Center
+
+        contentAlignment =
+            Alignment.Center
     ) {
 
         Column(
+
             horizontalAlignment =
                 Alignment.CenterHorizontally,
+
             verticalArrangement =
                 Arrangement.Center,
-            modifier = Modifier
-                .scale(scaleAnimation)
-                .alpha(alphaAnimation)
+
+            modifier =
+                Modifier
+                    .scale(
+                        scaleAnimation
+                    )
+                    .alpha(
+                        alphaAnimation
+                    )
         ) {
 
             Image(
-                painter = painterResource(
-                    id = R.drawable.shrigo_logo
-                ),
-                contentDescription = "ShriGo Logo",
-                modifier = Modifier
-                    .size(260.dp),
-                contentScale = ContentScale.Fit
+
+                painter =
+                    painterResource(
+                        id =
+                            R.drawable
+                                .shrigo_logo
+                    ),
+
+                contentDescription =
+                    "ShriGo Logo",
+
+                modifier =
+                    Modifier
+                        .size(
+                            260.dp
+                        ),
+
+                contentScale =
+                    ContentScale.Fit
             )
 
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Text(
-                text = "Premium Car Service",
-                color = Color.White,
-                fontSize = 20.sp,
-                fontWeight = FontWeight.SemiBold
+            Spacer(
+                modifier =
+                    Modifier.height(
+                        20.dp
+                    )
             )
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+
+                text =
+                    "Premium Car Service",
+
+                color =
+                    Color.White,
+
+                fontSize =
+                    20.sp,
+
+                fontWeight =
+                    FontWeight
+                        .SemiBold
+            )
+
+            Spacer(
+                modifier =
+                    Modifier.height(
+                        10.dp
+                    )
+            )
 
             Text(
-                text = "Ride Smart. Ride ShriGo.",
-                color = Color.LightGray,
-                style = MaterialTheme.typography.bodyMedium
+
+                text =
+                    "Ride Smart. Ride ShriGo.",
+
+                color =
+                    Color.LightGray,
+
+                style =
+                    MaterialTheme
+                        .typography
+                        .bodyMedium
             )
         }
     }
