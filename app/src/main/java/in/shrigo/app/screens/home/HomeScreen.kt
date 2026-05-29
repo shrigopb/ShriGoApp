@@ -78,64 +78,108 @@ fun HomeScreen(
         }
     ) { paddingValues ->
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .background(Color(0xFFF5F5F5))
-        ) {
-
-            SearchRideCard()
-
-            Text(
-                text = "Available Rides",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(
-                    horizontal = 16.dp,
-                    vertical = 8.dp
-                )
-            )
-
             when {
 
                 isLoading -> {
+
                     Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
+                        modifier = Modifier
+                            .fillMaxSize(),
+
+                        contentAlignment =
+                            Alignment.Center
                     ) {
+
                         CircularProgressIndicator()
                     }
                 }
 
                 errorMessage != null -> {
+
                     Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
+                        modifier = Modifier
+                            .fillMaxSize(),
+
+                        contentAlignment =
+                            Alignment.Center
                     ) {
+
                         Text(
-                            text = errorMessage ?: "Unknown Error",
-                            color = Color.Red
+                            text =
+                                errorMessage
+                                    ?: "Unknown Error",
+
+                            color =
+                                Color.Red
                         )
                     }
                 }
 
                 else -> {
+
                     LazyColumn(
-                        contentPadding = PaddingValues(
-                            bottom = 90.dp
-                        )
+
+                        modifier =
+                            Modifier
+                                .fillMaxSize()
+                                .padding(
+                                    paddingValues
+                                )
+                                .background(
+                                    Color(
+                                        0xFFF5F5F5
+                                    )
+                                ),
+
+                        contentPadding =
+                            PaddingValues(
+                                bottom = 24.dp
+                            )
                     ) {
 
-                        items(rides) { ride ->
-                            RideCard(ride)
+                        item {
+
+                            SearchRideCard()
+
+                            Text(
+
+                                text =
+                                    "Available Rides",
+
+                                style =
+                                    MaterialTheme
+                                        .typography
+                                        .titleLarge,
+
+                                fontWeight =
+                                    FontWeight.Bold,
+
+                                modifier =
+                                    Modifier.padding(
+
+                                        horizontal =
+                                            16.dp,
+
+                                        vertical =
+                                            8.dp
+                                    )
+                            )
+                        }
+
+                        items(
+                            rides
+                        ) { ride ->
+
+                            RideCard(
+                                ride
+                            )
                         }
                     }
                 }
             }
         }
     }
-}
+
 
 @Composable
 fun SearchRideCard() {
@@ -290,47 +334,51 @@ fun RideCard(
 
             Text(
                 text =
-                    "${ride.rideSource} → ${ride.rideDesti}",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
+                    "${ride.rideSource ?: "Unknown"} → " +
+                            "${ride.rideDesti ?: "Unknown"}",
 
-            Spacer(modifier = Modifier.height(6.dp))
+                style =
+                    MaterialTheme
+                        .typography
+                        .titleMedium,
 
-            Text(
-                text = "Via: ${ride.rideVia}"
-            )
-
-            Text(
-                text = "Time: ${ride.rideTime}"
+                fontWeight =
+                    FontWeight.Bold
             )
 
             Text(
-                text = "Date: ${ride.rideDate}"
+                text =
+                    "Via: ${
+                        ride.rideVia ?: "-"
+                    }"
             )
 
             Text(
-                text = "Seats Available: ${ride.rideSeats}"
+                text =
+                    "Time: ${
+                        ride.rideTime ?: "-"
+                    }"
             )
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text =
+                    "Date: ${
+                        ride.rideDate ?: "-"
+                    }"
+            )
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            Text(
+                text =
+                    "Seats Available: ${
+                        ride.rideSeats ?: "0"
+                    }"
+            )
 
-                Icon(
-                    Icons.Default.Person,
-                    contentDescription = null,
-                    tint = Color.Gray
-                )
-
-                Spacer(modifier = Modifier.width(4.dp))
-
-                Text(
-                    text = ride.driverFirstName
-                )
-            }
+            Text(
+                text =
+                    ride.driverFirstName
+                        ?: "Driver"
+            )
 
             Spacer(modifier = Modifier.height(12.dp))
 

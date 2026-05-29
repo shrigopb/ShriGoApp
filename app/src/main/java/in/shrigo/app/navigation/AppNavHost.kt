@@ -1,20 +1,33 @@
 package `in`.shrigo.app.navigation
 
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.*
+import `in`.shrigo.app.screens.auth.LoginScreen
 import `in`.shrigo.app.screens.bookings.BookingScreen
 import `in`.shrigo.app.screens.home.HomeScreen
-import `in`.shrigo.app.screens.profile.ProfileScreen
 import `in`.shrigo.app.screens.rides.MyRidesScreen
+import `in`.shrigo.app.screens.profile.ProfileScreen
 import `in`.shrigo.app.screens.splash.SplashScreen
-import `in`.shrigo.app.screens.auth.LoginScreen
+import `in`.shrigo.app.utils.SessionManager
+
 @Composable
 fun AppNavHost() {
 
     val navController =
         rememberNavController()
+
+    val context =
+        LocalContext.current
+
+    val sessionManager =
+        remember {
+            SessionManager(
+                context
+            )
+        }
 
     val bottomNavItems = listOf(
         BottomNav.Home,
@@ -41,7 +54,8 @@ fun AppNavHost() {
             ) {
 
                 NavigationBar(
-                    containerColor = Color.White
+                    containerColor =
+                        Color.White
                 ) {
 
                     bottomNavItems.forEach { item ->
@@ -56,34 +70,76 @@ fun AppNavHost() {
 
                             onClick = {
 
-                                when(item.route) {
+                                when (
+                                    item.route
+                                ) {
 
                                     Routes.MY_RIDES,
                                     Routes.BOOKINGS,
                                     Routes.PROFILE -> {
 
-                                        navController.navigate(
-                                            Routes.LOGIN
-                                        )
+                                        if (
+                                            sessionManager
+                                                .isLoggedIn()
+                                        ) {
+
+                                            navController
+                                                .navigate(
+                                                    item.route
+                                                ) {
+
+                                                    launchSingleTop =
+                                                        true
+                                                }
+
+                                        } else {
+
+                                            navController
+                                                .navigate(
+                                                    Routes.LOGIN
+                                                )
+                                        }
                                     }
 
-                                    else -> {
+                                    Routes.HOME -> {
 
-                                        navController.navigate(
-                                            item.route
-                                        ) {
-                                            popUpTo(
-                                                navController.graph.startDestinationId
-                                            )
+                                        val firstName =
 
-                                            launchSingleTop =
-                                                true
-                                        }
+                                            if (
+                                                sessionManager
+                                                    .isLoggedIn()
+                                            ) {
+
+                                                sessionManager
+                                                    .getFirstName()
+
+                                            } else {
+
+                                                "Guest"
+                                            }
+
+                                        navController
+                                            .navigate(
+
+                                                "${Routes.HOME}/$firstName"
+
+                                            ) {
+
+                                                popUpTo(
+                                                    navController
+                                                        .graph
+                                                        .startDestinationId
+                                                )
+
+                                                launchSingleTop =
+                                                    true
+                                            }
                                     }
                                 }
                             },
 
                             icon = {
+
                                 Icon(
                                     imageVector =
                                         item.icon,
@@ -94,6 +150,7 @@ fun AppNavHost() {
                             },
 
                             label = {
+
                                 Text(
                                     item.title
                                 )
@@ -107,11 +164,13 @@ fun AppNavHost() {
     ) { _ ->
 
         NavHost(
+
             navController =
                 navController,
 
             startDestination =
                 Routes.SPLASH
+
         ) {
 
             // Splash
@@ -124,7 +183,7 @@ fun AppNavHost() {
                 )
             }
 
-            // Home with firstName
+            // Home
             composable(
 
                 "${Routes.HOME}/{firstName}"
@@ -132,17 +191,17 @@ fun AppNavHost() {
             ) { backStackEntry ->
 
                 val firstName =
+
                     backStackEntry
                         .arguments
                         ?.getString(
                             "firstName"
-                        ) ?: ""
+                        )
+                        ?: "Guest"
 
                 HomeScreen(
-
                     firstName =
                         firstName
-
                 )
             }
 
@@ -161,7 +220,25 @@ fun AppNavHost() {
                 Routes.MY_RIDES
             ) {
 
-                MyRidesScreen()
+                if (
+                    sessionManager
+                        .isLoggedIn()
+                ) {
+
+                    MyRidesScreen()
+
+                } else {
+
+                    LaunchedEffect(
+                        Unit
+                    ) {
+
+                        navController
+                            .navigate(
+                                Routes.LOGIN
+                            )
+                    }
+                }
             }
 
             // Bookings
@@ -169,7 +246,25 @@ fun AppNavHost() {
                 Routes.BOOKINGS
             ) {
 
-                BookingScreen()
+                if (
+                    sessionManager
+                        .isLoggedIn()
+                ) {
+
+                    BookingScreen()
+
+                } else {
+
+                    LaunchedEffect(
+                        Unit
+                    ) {
+
+                        navController
+                            .navigate(
+                                Routes.LOGIN
+                            )
+                    }
+                }
             }
 
             // Profile
@@ -177,7 +272,27 @@ fun AppNavHost() {
                 Routes.PROFILE
             ) {
 
-                ProfileScreen()
+                if (
+                    sessionManager
+                        .isLoggedIn()
+                ) {
+
+                    ProfileScreen(
+                        navController
+                    )
+
+                } else {
+
+                    LaunchedEffect(
+                        Unit
+                    ) {
+
+                        navController
+                            .navigate(
+                                Routes.LOGIN
+                            )
+                    }
+                }
             }
         }
     }

@@ -12,12 +12,19 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import `in`.shrigo.app.navigation.Routes
+import `in`.shrigo.app.utils.SessionManager
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun LoginScreen(
     navController: NavController,
     viewModel: LoginViewModel = viewModel()
 ) {
+
+    val context =
+
+        LocalContext
+            .current
 
     var emailOrPhone by remember {
         mutableStateOf("")
@@ -41,6 +48,34 @@ fun LoginScreen(
 
         loginState?.let {
 
+            val sessionManager =
+
+                SessionManager(
+                    context
+                )
+
+            sessionManager
+                .saveLoginSession(
+
+                    userId =
+                        it.userId ?: 0,
+
+                    firstName =
+                        it.firstName,
+
+                    lastName =
+                        it.lastName,
+
+                    email =
+                        it.email,
+
+                    phone =
+                        it.phone,
+
+                    role =
+                        it.role
+                )
+
             navController.navigate(
 
                 "${Routes.HOME}/${it.firstName}"
@@ -54,7 +89,8 @@ fun LoginScreen(
                     inclusive = true
                 }
 
-                launchSingleTop = true
+                launchSingleTop =
+                    true
             }
         }
     }
