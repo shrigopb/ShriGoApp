@@ -24,6 +24,10 @@ import `in`.shrigo.app.models.Ride
 import `in`.shrigo.app.screens.home.HomeViewModel
 import androidx.compose.material.icons.filled.AirplanemodeActive
 import androidx.compose.material.icons.filled.People
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.material.icons.filled.Call
+import androidx.compose.ui.platform.LocalContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -322,6 +326,9 @@ fun RideCard(
     ride: Ride
 ) {
 
+    val context =
+        LocalContext.current
+
     Card(
 
         modifier = Modifier
@@ -375,7 +382,7 @@ fun RideCard(
                     )
             )
 
-            // TIME
+            // DATE + TIME
             Text(
 
                 text =
@@ -465,10 +472,7 @@ fun RideCard(
                     Text(
 
                         text =
-                            "₹${
-                                ride.ridePrice
-                                    ?: "0"
-                            } /seat",
+                            "₹${ride.ridePrice ?: "0"} /seat",
 
                         color =
                             Color(0xFF2E7D32),
@@ -519,8 +523,9 @@ fun RideCard(
                 ) {
 
                     Icon(
-                        Icons.Default
-                            .AirplanemodeActive,
+                        imageVector =
+                            Icons.Default
+                                .AirplanemodeActive,
 
                         contentDescription =
                             null,
@@ -552,8 +557,9 @@ fun RideCard(
                 ) {
 
                     Icon(
-                        Icons.Default
-                            .People,
+                        imageVector =
+                            Icons.Default
+                                .People,
 
                         contentDescription =
                             null,
@@ -623,38 +629,56 @@ fun RideCard(
                     )
             )
 
-            // DRIVER CONTACT BUTTON
+            // CALL DRIVER BUTTON
             OutlinedButton(
 
                 onClick = {
 
+                    val intent = Intent(
+
+                        Intent.ACTION_DIAL,
+
+                        Uri.parse(
+                            "tel:${
+                                ride.driverContact
+                                    ?: ""
+                            }"
+                        )
+                    )
+
+                    context.startActivity(
+                        intent
+                    )
                 },
 
                 modifier =
-                    Modifier
-                        .fillMaxWidth(),
+                    Modifier.fillMaxWidth(),
 
                 shape =
                     RoundedCornerShape(
-                        12.dp
-                    ),
-
-                colors =
-                    ButtonDefaults
-                        .outlinedButtonColors(
-
-                            contentColor =
-                                Color(
-                                    0xFF2E7D32
-                                )
-                        )
+                        14.dp
+                    )
             ) {
 
-                Text(
+                Icon(
 
+                    imageVector =
+                        Icons.Default.Call,
+
+                    contentDescription =
+                        "Call Driver"
+                )
+
+                Spacer(
+                    modifier =
+                        Modifier.width(
+                            8.dp
+                        )
+                )
+
+                Text(
                     text =
-                        ride.driverContact
-                            ?: "Driver Contact"
+                        "Call Driver"
                 )
             }
         }
