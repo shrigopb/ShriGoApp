@@ -26,6 +26,8 @@ import `in`.shrigo.app.screens.home.HomeViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    firstName: String,
+
     viewModel: HomeViewModel = viewModel()
 ) {
 
@@ -49,8 +51,29 @@ fun HomeScreen(
                             text = "Premium Car Service",
                             style = MaterialTheme.typography.bodySmall
                         )
+                        Spacer(
+                            modifier =
+                                Modifier.height(4.dp)
+                        )
+
+                        Text(
+                            text =
+                                "Welcome : $firstName",
+
+                            style =
+                                MaterialTheme
+                                    .typography
+                                    .bodyMedium,
+
+                            fontWeight =
+                                FontWeight.Medium,
+
+                            color =
+                                Color.DarkGray
+                        )
                     }
                 }
+
             )
         }
     ) { paddingValues ->

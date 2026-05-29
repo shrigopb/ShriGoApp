@@ -1,5 +1,6 @@
 package `in`.shrigo.app.repository
 
+import android.util.Log
 import `in`.shrigo.app.api.RetrofitClient
 import `in`.shrigo.app.models.LoginRequest
 import `in`.shrigo.app.models.LoginResponse
@@ -34,16 +35,37 @@ class RideRepository {
                         )
                     )
 
+            Log.d(
+                "LOGIN_API",
+                "Code: ${response.code()}"
+            )
+
+            Log.d(
+                "LOGIN_API",
+                "Body: ${response.body()}"
+            )
+
             if (response.isSuccessful) {
 
                 response.body()
 
             } else {
 
+                Log.d(
+                    "LOGIN_API",
+                    "Error: ${response.errorBody()?.string()}"
+                )
+
                 null
             }
 
         } catch (e: Exception) {
+
+            Log.e(
+                "LOGIN_API",
+                "Exception",
+                e
+            )
 
             null
         }

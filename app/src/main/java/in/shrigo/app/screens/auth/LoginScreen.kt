@@ -39,15 +39,18 @@ fun LoginScreen(
     // Navigate after successful login
     LaunchedEffect(loginState) {
 
-        if (loginState != null) {
+        loginState?.let {
 
             navController.navigate(
-                Routes.HOME
+
+                "${Routes.HOME}/${it.firstName}"
+
             ) {
 
                 popUpTo(
-                    Routes.HOME
+                    Routes.LOGIN
                 ) {
+
                     inclusive = true
                 }
 

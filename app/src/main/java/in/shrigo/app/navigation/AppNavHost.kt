@@ -13,7 +13,8 @@ import `in`.shrigo.app.screens.auth.LoginScreen
 @Composable
 fun AppNavHost() {
 
-    val navController = rememberNavController()
+    val navController =
+        rememberNavController()
 
     val bottomNavItems = listOf(
         BottomNav.Home,
@@ -46,8 +47,12 @@ fun AppNavHost() {
                     bottomNavItems.forEach { item ->
 
                         NavigationBarItem(
+
                             selected =
-                                currentRoute == item.route,
+                                currentRoute
+                                    ?.startsWith(
+                                        item.route
+                                    ) == true,
 
                             onClick = {
 
@@ -71,7 +76,8 @@ fun AppNavHost() {
                                                 navController.graph.startDestinationId
                                             )
 
-                                            launchSingleTop = true
+                                            launchSingleTop =
+                                                true
                                         }
                                     }
                                 }
@@ -79,13 +85,18 @@ fun AppNavHost() {
 
                             icon = {
                                 Icon(
-                                    imageVector = item.icon,
-                                    contentDescription = item.title
+                                    imageVector =
+                                        item.icon,
+
+                                    contentDescription =
+                                        item.title
                                 )
                             },
 
                             label = {
-                                Text(item.title)
+                                Text(
+                                    item.title
+                                )
                             }
                         )
                     }
@@ -96,29 +107,76 @@ fun AppNavHost() {
     ) { _ ->
 
         NavHost(
-            navController = navController,
-            startDestination = Routes.SPLASH
+            navController =
+                navController,
+
+            startDestination =
+                Routes.SPLASH
         ) {
-            // screens
-       composable(Routes.SPLASH) {
-                SplashScreen(navController)
+
+            // Splash
+            composable(
+                Routes.SPLASH
+            ) {
+
+                SplashScreen(
+                    navController
+                )
             }
 
-            composable(Routes.HOME) {
-                HomeScreen()
+            // Home with firstName
+            composable(
+
+                "${Routes.HOME}/{firstName}"
+
+            ) { backStackEntry ->
+
+                val firstName =
+                    backStackEntry
+                        .arguments
+                        ?.getString(
+                            "firstName"
+                        ) ?: ""
+
+                HomeScreen(
+
+                    firstName =
+                        firstName
+
+                )
             }
-            composable(Routes.LOGIN) {
-                LoginScreen(navController)
+
+            // Login
+            composable(
+                Routes.LOGIN
+            ) {
+
+                LoginScreen(
+                    navController
+                )
             }
-            composable(Routes.MY_RIDES) {
+
+            // My Rides
+            composable(
+                Routes.MY_RIDES
+            ) {
+
                 MyRidesScreen()
             }
 
-            composable(Routes.BOOKINGS) {
+            // Bookings
+            composable(
+                Routes.BOOKINGS
+            ) {
+
                 BookingScreen()
             }
 
-            composable(Routes.PROFILE) {
+            // Profile
+            composable(
+                Routes.PROFILE
+            ) {
+
                 ProfileScreen()
             }
         }
