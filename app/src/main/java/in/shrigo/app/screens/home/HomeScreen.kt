@@ -28,6 +28,8 @@ import android.content.Intent
 import android.net.Uri
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.ui.platform.LocalContext
+import java.time.format.DateTimeFormatter
+import java.time.LocalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -381,13 +383,40 @@ fun RideCard(
                         4.dp
                     )
             )
+            val formattedTime = try {
 
+                val startTime =
+
+                    LocalTime.parse(
+                        ride.rideTime.toString()
+                    )
+
+                val endTime =
+
+                    startTime.plusHours(
+                        2
+                    )
+
+                val formatter =
+
+                    DateTimeFormatter
+                        .ofPattern(
+                            "hh:mm a"
+                        )
+
+                "${startTime.format(formatter)}" +
+                        " - " +
+                        "${endTime.format(formatter)}"
+
+            } catch (e: Exception) {
+
+                "-"
+            }
             // DATE + TIME
             Text(
 
                 text =
-                    "${ride.rideDate ?: "-"} • " +
-                            "${ride.rideTime ?: "-"}",
+                    "${ride.rideDate ?: "-"} • $formattedTime",
 
                 style =
                     MaterialTheme
