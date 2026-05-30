@@ -6,6 +6,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -13,7 +14,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import `in`.shrigo.app.navigation.Routes
 import `in`.shrigo.app.utils.SessionManager
-import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun LoginScreen(
@@ -22,9 +22,7 @@ fun LoginScreen(
 ) {
 
     val context =
-
-        LocalContext
-            .current
+        LocalContext.current
 
     var emailOrPhone by remember {
         mutableStateOf("")
@@ -76,9 +74,13 @@ fun LoginScreen(
                         it.role
                 )
 
+            val firstName =
+                it.firstName
+                    ?: "Guest"
+
             navController.navigate(
 
-                "${Routes.HOME}/${it.firstName}"
+                "${Routes.HOME}/$firstName"
 
             ) {
 
@@ -98,10 +100,15 @@ fun LoginScreen(
     Scaffold { paddingValues ->
 
         Column(
+
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .padding(24.dp),
+                .padding(
+                    paddingValues
+                )
+                .padding(
+                    24.dp
+                ),
 
             horizontalAlignment =
                 Alignment.CenterHorizontally,
@@ -111,7 +118,10 @@ fun LoginScreen(
         ) {
 
             Text(
-                text = "Welcome to ShriGo",
+
+                text =
+                    "Welcome to ShriGo",
+
                 style =
                     MaterialTheme
                         .typography
@@ -122,100 +132,149 @@ fun LoginScreen(
             )
 
             Spacer(
+
                 modifier =
-                    Modifier.height(10.dp)
+                    Modifier.height(
+                        10.dp
+                    )
             )
 
             Text(
+
                 text =
                     "Login to continue"
             )
 
             Spacer(
+
                 modifier =
-                    Modifier.height(30.dp)
+                    Modifier.height(
+                        30.dp
+                    )
             )
 
             // Email / Phone
             OutlinedTextField(
-                value = emailOrPhone,
+
+                value =
+                    emailOrPhone,
 
                 onValueChange = {
-                    emailOrPhone = it
+
+                    emailOrPhone =
+                        it
                 },
 
                 label = {
-                    Text("Email / Phone")
+
+                    Text(
+                        "Email / Phone"
+                    )
                 },
 
                 modifier =
-                    Modifier.fillMaxWidth(),
+                    Modifier
+                        .fillMaxWidth(),
 
-                singleLine = true
+                singleLine =
+                    true
             )
 
             Spacer(
+
                 modifier =
-                    Modifier.height(14.dp)
+                    Modifier.height(
+                        14.dp
+                    )
             )
 
             // Password
             OutlinedTextField(
-                value = password,
+
+                value =
+                    password,
 
                 onValueChange = {
-                    password = it
+
+                    password =
+                        it
                 },
 
                 label = {
-                    Text("Password")
+
+                    Text(
+                        "Password"
+                    )
                 },
 
                 visualTransformation =
                     PasswordVisualTransformation(),
 
                 modifier =
-                    Modifier.fillMaxWidth(),
+                    Modifier
+                        .fillMaxWidth(),
 
-                singleLine = true
+                singleLine =
+                    true
             )
 
             Spacer(
+
                 modifier =
-                    Modifier.height(24.dp)
+                    Modifier.height(
+                        24.dp
+                    )
             )
 
             // Login Button
             Button(
+
                 onClick = {
 
                     if (
-                        emailOrPhone.isNotBlank()
+
+                        emailOrPhone
+                            .isNotBlank()
+
                         &&
-                        password.isNotBlank()
+
+                        password
+                            .isNotBlank()
                     ) {
 
-                        viewModel.loginUser(
-                            emailOrPhone.trim(),
-                            password.trim()
-                        )
+                        viewModel
+                            .loginUser(
+
+                                emailOrPhone
+                                    .trim(),
+
+                                password
+                                    .trim()
+                            )
                     }
                 },
 
                 modifier =
-                    Modifier.fillMaxWidth(),
+                    Modifier
+                        .fillMaxWidth(),
 
                 shape =
-                    RoundedCornerShape(14.dp)
+                    RoundedCornerShape(
+                        14.dp
+                    )
             ) {
 
-                if (isLoading) {
+                if (
+                    isLoading
+                ) {
 
                     CircularProgressIndicator()
 
                 } else {
 
-                    Text("Login")
+                    Text(
+                        "Login"
+                    )
                 }
             }
 
@@ -223,12 +282,18 @@ fun LoginScreen(
             error?.let {
 
                 Spacer(
+
                     modifier =
-                        Modifier.height(10.dp)
+                        Modifier.height(
+                            10.dp
+                        )
                 )
 
                 Text(
-                    text = it,
+
+                    text =
+                        it,
+
                     color =
                         MaterialTheme
                             .colorScheme

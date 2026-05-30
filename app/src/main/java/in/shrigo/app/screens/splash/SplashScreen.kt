@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -23,12 +24,23 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import `in`.shrigo.app.R
 import `in`.shrigo.app.navigation.Routes
+import `in`.shrigo.app.utils.SessionManager
 import kotlinx.coroutines.delay
 
 @Composable
 fun SplashScreen(
     navController: NavController
 ) {
+
+    val context =
+        LocalContext.current
+
+    val sessionManager =
+        remember {
+            SessionManager(
+                context
+            )
+        }
 
     var startAnimation by remember {
         mutableStateOf(false)
@@ -72,9 +84,25 @@ fun SplashScreen(
 
         delay(2500)
 
+        val firstName =
+
+            if (
+                sessionManager
+                    .isLoggedIn()
+            ) {
+
+                sessionManager
+                    .getFirstName()
+                    ?: "Guest"
+
+            } else {
+
+                "Guest"
+            }
+
         navController.navigate(
 
-            "${Routes.HOME}/Guest"
+            "${Routes.HOME}/$firstName"
 
         ) {
 

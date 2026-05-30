@@ -112,28 +112,35 @@ fun AppNavHost() {
 
                                                 sessionManager
                                                     .getFirstName()
+                                                    ?: "Guest"
 
                                             } else {
 
                                                 "Guest"
                                             }
 
-                                        navController
-                                            .navigate(
+                                        navController.navigate(
 
-                                                "${Routes.HOME}/$firstName"
+                                            "${Routes.HOME}/$firstName"
 
+                                        ) {
+
+                                            launchSingleTop =
+                                                true
+
+                                            restoreState =
+                                                true
+
+                                            popUpTo(
+                                                navController
+                                                    .graph
+                                                    .startDestinationId
                                             ) {
 
-                                                popUpTo(
-                                                    navController
-                                                        .graph
-                                                        .startDestinationId
-                                                )
-
-                                                launchSingleTop =
+                                                saveState =
                                                     true
                                             }
+                                        }
                                     }
                                 }
                             },
