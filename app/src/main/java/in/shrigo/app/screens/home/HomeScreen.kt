@@ -30,6 +30,9 @@ import androidx.compose.material.icons.filled.Call
 import androidx.compose.ui.platform.LocalContext
 import java.time.format.DateTimeFormatter
 import java.time.LocalTime
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -363,18 +366,9 @@ fun RideCard(
 
             // SOURCE
             Text(
-
-                text =
-                    ride.rideSource
-                        ?: "Unknown",
-
-                style =
-                    MaterialTheme
-                        .typography
-                        .titleLarge,
-
-                fontWeight =
-                    FontWeight.Bold
+                text = ride.rideSource ?: "Unknown",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold
             )
 
             Spacer(
@@ -385,49 +379,64 @@ fun RideCard(
             )
             val formattedTime = try {
 
-                val startTime =
+                if (ride.rideTime == null) {
+                    "-"
+                } else {
 
-                    LocalTime.parse(
-                        ride.rideTime.toString()
-                    )
-
-                val endTime =
-
-                    startTime.plusHours(
-                        2
-                    )
-
-                val formatter =
-
-                    DateTimeFormatter
-                        .ofPattern(
-                            "hh:mm a"
+                    val inputFormat =
+                        SimpleDateFormat(
+                            "HH:mm:ss",
+                            Locale.getDefault()
                         )
 
-                "${startTime.format(formatter)}" +
-                        " - " +
-                        "${endTime.format(formatter)}"
+                    val outputFormat =
+                        SimpleDateFormat(
+                            "hh:mm a",
+                            Locale.getDefault()
+                        )
+
+                    val startDate =
+                        inputFormat.parse(
+                            ride.rideTime.toString()
+                        )
+
+                    if (startDate == null) {
+                        "-"
+                    } else {
+
+                        val calendar =
+                            Calendar.getInstance()
+
+                        calendar.time = startDate
+
+                        val startTime =
+                            outputFormat.format(
+                                calendar.time
+                            )
+
+                        calendar.add(
+                            Calendar.HOUR,
+                            2
+                        )
+
+                        val endTime =
+                            outputFormat.format(
+                                calendar.time
+                            )
+
+                        "$startTime - $endTime"
+                    }
+                }
 
             } catch (e: Exception) {
-
                 "-"
             }
             // DATE + TIME
             Text(
-
-                text =
-                    "${ride.rideDate ?: "-"} • $formattedTime",
-
-                style =
-                    MaterialTheme
-                        .typography
-                        .bodySmall,
-
-                color =
-                    Color(0xFF2E7D32),
-
-                fontWeight =
-                    FontWeight.SemiBold
+                text = "${ride.rideDate ?: "-"} • $formattedTime",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color(0xFF2E7D32),
+                fontWeight = FontWeight.SemiBold
             )
 
             Spacer(
@@ -471,13 +480,8 @@ fun RideCard(
                     )
 
                     Text(
-
-                        text =
-                            ride.rideVia
-                                ?: "-",
-
-                        fontWeight =
-                            FontWeight.Medium
+                        text = ride.rideVia ?: "-",
+                        fontWeight = FontWeight.Medium
                     )
                 }
 
@@ -499,20 +503,10 @@ fun RideCard(
                     )
 
                     Text(
-
-                        text =
-                            "₹${ride.ridePrice ?: "0"} /seat",
-
-                        color =
-                            Color(0xFF2E7D32),
-
-                        fontWeight =
-                            FontWeight.Bold,
-
-                        style =
-                            MaterialTheme
-                                .typography
-                                .titleMedium
+                        text = "₹${ride.ridePrice ?: 0} /seat",
+                        color = Color(0xFF2E7D32),
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.titleMedium
                     )
                 }
             }
@@ -573,10 +567,7 @@ fun RideCard(
                     )
 
                     Text(
-
-                        text =
-                            ride.rideDesti
-                                ?: "Unknown"
+                        text = ride.rideDesti ?: "Unknown"
                     )
                 }
 
@@ -605,9 +596,7 @@ fun RideCard(
                     )
 
                     Text(
-
-                        text =
-                            "${ride.rideSeats ?: "0"} Seats"
+                        text = "${ride.rideSeats ?: 0} Seats"
                     )
                 }
             }

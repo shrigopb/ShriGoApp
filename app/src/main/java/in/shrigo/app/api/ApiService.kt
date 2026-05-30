@@ -15,9 +15,8 @@ interface ApiService {
     //Get Methods
     //--------------------------------------
     //Ride Info API
-    @GET("api/RideApi")
+    @GET("api/RideApi/active")
     suspend fun getRides(): List<Ride>
-
     //Profile Info API
     @GET(
         "api/ProfileApi/{userId}/{role}"
