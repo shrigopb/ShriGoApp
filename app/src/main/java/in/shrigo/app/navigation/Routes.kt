@@ -9,5 +9,6 @@ object Routes {
     const val MY_RIDES = "my_rides"
     const val BOOKINGS = "bookings"
     const val PROFILE = "profile"
+    const val UPLOAD_RIDE = "upload_ride"
 
 }

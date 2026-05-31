@@ -9,6 +9,8 @@ import `in`.shrigo.app.models.LoginRequest
 import `in`.shrigo.app.models.LoginResponse
 import `in`.shrigo.app.models.ProfileResponse
 import retrofit2.http.Path
+import `in`.shrigo.app.models.UploadRideRequest
+import `in`.shrigo.app.models.UploadRideResponse
 
 interface ApiService {
     //--------------------------------------
@@ -44,4 +46,20 @@ interface ApiService {
         @Body request: LoginRequest
 
     ): Response<LoginResponse>
+
+
+
+//--------------------------------------
+// Upload Ride API
+//--------------------------------------
+
+    @POST("api/RideApi/upload")
+    suspend fun uploadRide(
+
+        @Body request:
+        UploadRideRequest
+
+    ): Response<UploadRideResponse>
+
+
 }
