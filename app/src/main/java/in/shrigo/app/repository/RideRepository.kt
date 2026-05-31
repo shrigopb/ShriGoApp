@@ -136,7 +136,7 @@ class RideRepository {
 
                 "Body: ${response.body()}"
             )
-
+            Log.e( "UPLOAD_RIDE_ERROR", response.errorBody()?.string() ?: "No error body" )
             if (
                 response.isSuccessful
             ) {

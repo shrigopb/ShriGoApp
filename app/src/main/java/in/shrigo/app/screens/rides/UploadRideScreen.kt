@@ -14,7 +14,16 @@ import androidx.navigation.NavController
 import `in`.shrigo.app.models.UploadRideRequest
 import `in`.shrigo.app.navigation.Routes
 import `in`.shrigo.app.utils.SessionManager
+import androidx.compose.material3.ExperimentalMaterial3Api
+import android.app.DatePickerDialog
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
+import android.widget.Toast
 
+@OptIn(
+    ExperimentalMaterial3Api::class
+)
 @Composable
 fun UploadRideScreen(
 
@@ -134,25 +143,26 @@ fun UploadRideScreen(
     // Success Navigation
     //----------------------------------
 
-    LaunchedEffect(
-        uploadSuccess
-    ) {
+    LaunchedEffect(uploadSuccess) {
 
-        if (
-            uploadSuccess
-        ) {
+        if (uploadSuccess) {
 
-            navController
-                .navigate(
-                    Routes.MY_RIDES
+            Toast.makeText(
+                context,
+                "Ride uploaded successfully",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            navController.navigate(
+                Routes.MY_RIDES
+            ) {
+
+                popUpTo(
+                    Routes.UPLOAD_RIDE
                 ) {
-
-                    popUpTo(
-                        Routes.UPLOAD_RIDE
-                    ) {
-                        inclusive = true
-                    }
+                    inclusive = true
                 }
+            }
         }
     }
 
@@ -192,16 +202,367 @@ fun UploadRideScreen(
                 )
         )
 
-        OutlinedTextField(
-            value = rideSource,
-            onValueChange = {
-                rideSource = it
-            },
-            label = {
-                Text("Ride Source")
-            },
+
+        //----------------------------------
+        // Ride Source Dropdown
+        //----------------------------------
+        val rideLocations = listOf(
+
+            "HYD",
+            "JBS",
+            "Airport",
+            "MTPL",
+            "KRTL",
+            "RYKL",
+            "ARMR",
+            "NZB",
+            "JBS,HYD",
+            "JBS,Airport",
+            "JBS,HYD,Airport",
+            "KRTL,MTPL",
+            "RYKL,KRTL,MTPL"
+        )
+
+        var expandedSource by remember {
+            mutableStateOf(false)
+        }
+        var expandedVia by remember {
+            mutableStateOf(false)
+        }
+        var expandedTime by remember {
+            mutableStateOf(false)
+        }
+
+        ExposedDropdownMenuBox(
+
+            expanded =
+                expandedSource,
+
+            onExpandedChange = {
+
+                expandedSource =
+                    !expandedSource
+            }
+
+        ) {
+
+            OutlinedTextField(
+
+                value =
+                    rideSource,
+
+                onValueChange = {},
+
+                readOnly =
+                    true,
+
+                label = {
+                    Text("Ride Source")
+                },
+
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .menuAnchor()
+            )
+
+            ExposedDropdownMenu(
+
+                expanded =
+                    expandedSource,
+
+                onDismissRequest = {
+
+                    expandedSource =
+                        false
+                }
+
+            ) {
+
+                rideLocations.forEach {
+
+                    DropdownMenuItem(
+
+                        text = {
+                            Text(it)
+                        },
+
+                        onClick = {
+
+                            rideSource =
+                                it
+
+                            expandedSource =
+                                false
+                        }
+                    )
+                }
+            }
+        }
+
+
+        Spacer(
             modifier =
-                Modifier.fillMaxWidth()
+                Modifier.height(12.dp)
+        )
+
+
+//----------------------------------
+// Ride Destination Dropdown
+//----------------------------------
+
+        val rideDestilist = listOf(
+
+            "HYD",
+            "JBS",
+            "Airport",
+            "MTPL",
+            "KRTL",
+            "RYKL",
+            "ARMR",
+            "NZB",
+            "JBS,HYD",
+            "JBS,Airport",
+            "JBS,HYD,Airport",
+            "KRTL,MTPL",
+            "RYKL,KRTL,MTPL"
+        )
+
+        var expandedDesti by remember {
+            mutableStateOf(false)
+        }
+
+        ExposedDropdownMenuBox(
+
+            expanded =
+                expandedDesti,
+
+            onExpandedChange = {
+
+                expandedDesti =
+                    !expandedDesti
+            }
+
+        ) {
+
+            OutlinedTextField(
+
+                value =
+                    rideDesti,
+
+                onValueChange = {},
+
+                readOnly =
+                    true,
+
+                label = {
+                    Text("Ride Desti")
+                },
+
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .menuAnchor()
+            )
+
+            ExposedDropdownMenu(
+
+                expanded =
+                    expandedDesti,
+
+                onDismissRequest = {
+
+                    expandedDesti =
+                        false
+                }
+
+            ) {
+
+                rideDestilist.forEach {
+
+                    DropdownMenuItem(
+
+                        text = {
+                            Text(it)
+                        },
+
+                        onClick = {
+
+                            rideDesti =
+                                it
+
+                            expandedDesti =
+                                false
+                        }
+                    )
+                }
+            }
+        }
+        Spacer(
+            modifier =
+                Modifier.height(12.dp)
+        )
+
+        //--------------------------------------------------
+        //Ride Via
+        //------------------------------------------------
+        val viaRoutes = listOf(
+            "Vemulawada,SDT", "Armr,Kamareddy", "KNR,SDT", "Kamareddy"
+        )
+        ExposedDropdownMenuBox(
+
+            expanded =
+                expandedVia,
+
+            onExpandedChange = {
+
+                expandedVia =
+                    !expandedVia
+            }
+
+        ) {
+
+            OutlinedTextField(
+
+                value =
+                    rideVia,
+
+                onValueChange = {},
+
+                readOnly =
+                    true,
+
+                label = {
+                    Text("Via")
+                },
+
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .menuAnchor()
+            )
+
+            ExposedDropdownMenu(
+
+                expanded =
+                    expandedVia,
+
+                onDismissRequest = {
+
+                    expandedVia =
+                        false
+                }
+
+            ) {
+
+                viaRoutes.forEach {
+
+                    DropdownMenuItem(
+
+                        text = {
+                            Text(it)
+                        },
+
+                        onClick = {
+
+                            rideVia =
+                                it
+
+                            expandedVia =
+                                false
+                        }
+                    )
+                }
+            }
+        }
+        Spacer(
+            modifier =
+                Modifier.height(12.dp)
+        )
+        //--------------------------------------------------
+        //Ride Date
+        //------------------------------------------------
+         val calendar =
+
+            Calendar.getInstance()
+
+        OutlinedTextField(
+
+            value =
+                rideDate,
+
+            onValueChange = {},
+
+            readOnly =
+                true,
+
+            label = {
+                Text("Ride Date")
+            },
+
+            modifier =
+                Modifier.fillMaxWidth(),
+
+            trailingIcon = {
+
+                TextButton(
+
+                    onClick = {
+
+                        DatePickerDialog(
+
+                            context,
+
+                            { _, year, month, dayOfMonth ->
+
+                                val selectedCalendar =
+
+                                    Calendar
+                                        .getInstance()
+
+                                selectedCalendar.set(
+
+                                    year,
+                                    month,
+                                    dayOfMonth
+                                )
+
+                                rideDate =
+
+                                    SimpleDateFormat(
+
+                                        "yyyy-MM-dd",
+
+                                        Locale
+                                            .getDefault()
+
+                                    ).format(
+
+                                        selectedCalendar
+                                            .time
+                                    )
+                            },
+
+                            calendar.get(
+                                Calendar.YEAR
+                            ),
+
+                            calendar.get(
+                                Calendar.MONTH
+                            ),
+
+                            calendar.get(
+                                Calendar.DAY_OF_MONTH
+                            )
+
+                        ).show()
+                    }
+
+                ) {
+
+                    Text("📅")
+                }
+            }
         )
 
         Spacer(
@@ -209,85 +570,186 @@ fun UploadRideScreen(
                 Modifier.height(12.dp)
         )
 
-        OutlinedTextField(
-            value = rideDesti,
-            onValueChange = {
-                rideDesti = it
-            },
-            label = {
-                Text("Ride Destination")
-            },
-            modifier =
-                Modifier.fillMaxWidth()
+        //-----------------------------------
+        //Ride time
+        //-----------------------------------
+       val rideTimes = listOf(
+
+            "01:00 am",
+            "02:00 am",
+            "03:00 am",
+            "04:00 am",
+            "05:00 am",
+            "06:00 am",
+            "07:00 am",
+            "08:00 am",
+            "09:00 am",
+            "10:00 am",
+            "11:00 am",
+            "12:00 am",
+
+            "01:00 pm",
+            "02:00 pm",
+            "03:00 pm",
+            "04:00 pm",
+            "05:00 pm",
+            "06:00 pm",
+            "07:00 pm",
+            "08:00 pm",
+            "09:00 pm",
+            "10:00 pm",
+            "11:00 pm",
+            "12:00 pm"
         )
+
+        ExposedDropdownMenuBox(
+
+            expanded =
+                expandedTime,
+
+            onExpandedChange = {
+
+                expandedTime =
+                    !expandedTime
+            }
+
+        ) {
+
+            OutlinedTextField(
+
+                value =
+                    rideTime,
+
+                onValueChange = {},
+
+                readOnly =
+                    true,
+
+                label = {
+                    Text("Time")
+                },
+
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .menuAnchor()
+            )
+
+            ExposedDropdownMenu(
+
+                expanded =
+                    expandedTime,
+
+                onDismissRequest = {
+
+                    expandedTime =
+                        false
+                }
+
+            ) {
+
+                rideTimes.forEach {
+
+                    DropdownMenuItem(
+
+                        text = {
+                            Text(it)
+                        },
+
+                        onClick = {
+
+                            rideTime =
+                                it
+
+                            expandedTime =
+                                false
+                        }
+                    )
+                }
+            }
+        }
+
 
         Spacer(
             modifier =
                 Modifier.height(12.dp)
         )
 
-        OutlinedTextField(
-            value = rideVia,
-            onValueChange = {
-                rideVia = it
-            },
-            label = {
-                Text("Via")
-            },
-            modifier =
-                Modifier.fillMaxWidth()
-        )
+        //--------------------------------
+        //Rime Seats
+        //----------------------------
+        var expandedSeats by remember {
+            mutableStateOf(false)
+        }
 
-        Spacer(
-            modifier =
-                Modifier.height(12.dp)
-        )
+        val seatOptions = listOf( "1", "2", "3", "4", "5", "6" )
+         ExposedDropdownMenuBox(
 
-        OutlinedTextField(
-            value = rideDate,
-            onValueChange = {
-                rideDate = it
-            },
-            label = {
-                Text("Date (yyyy-MM-dd)")
-            },
-            modifier =
-                Modifier.fillMaxWidth()
-        )
+            expanded =
+                expandedSeats,
 
-        Spacer(
-            modifier =
-                Modifier.height(12.dp)
-        )
+            onExpandedChange = {
 
-        OutlinedTextField(
-            value = rideTime,
-            onValueChange = {
-                rideTime = it
-            },
-            label = {
-                Text("Time (HH:mm)")
-            },
-            modifier =
-                Modifier.fillMaxWidth()
-        )
+                expandedSeats =
+                    !expandedSeats
+            }
 
-        Spacer(
-            modifier =
-                Modifier.height(12.dp)
-        )
+        ) {
 
-        OutlinedTextField(
-            value = rideSeats,
-            onValueChange = {
-                rideSeats = it
-            },
-            label = {
-                Text("Seats")
-            },
-            modifier =
-                Modifier.fillMaxWidth()
-        )
+            OutlinedTextField(
+
+                value =
+                    rideSeats,
+
+                onValueChange = {},
+
+                readOnly =
+                    true,
+
+                label = {
+                    Text("Seats")
+                },
+
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .menuAnchor()
+            )
+
+            ExposedDropdownMenu(
+
+                expanded =
+                    expandedSeats,
+
+                onDismissRequest = {
+
+                    expandedSeats =
+                        false
+                }
+
+            ) {
+
+                seatOptions.forEach {
+
+                    DropdownMenuItem(
+
+                        text = {
+                            Text(it)
+                        },
+
+                        onClick = {
+
+                            rideSeats =
+                                it
+
+                            expandedSeats =
+                                false
+                        }
+                    )
+                }
+            }
+        }
+
 
         Spacer(
             modifier =
@@ -365,8 +827,7 @@ fun UploadRideScreen(
                         rideVia =
                             rideVia,
 
-                        rideTime =
-                            rideTime,
+                        rideTime = convertTo24Hour(rideTime),
 
                         rideSeats =
                             rideSeats,
@@ -431,6 +892,38 @@ fun UploadRideScreen(
                 text = it
             )
         }
+    }
+}
+//Convertor ampmtime
+private fun convertTo24Hour(ampmTime: String): String {
+
+    return try {
+
+        val inputFormat =
+
+            java.text.SimpleDateFormat(
+                "hh:mm a",
+                java.util.Locale.ENGLISH
+            )
+
+        val outputFormat =
+
+            java.text.SimpleDateFormat(
+                "HH:mm:ss",
+                java.util.Locale.ENGLISH
+            )
+
+        val date =
+            inputFormat.parse(
+                ampmTime
+                    .uppercase()
+            )
+
+        outputFormat.format(date!!)
+
+    } catch (e: Exception) {
+
+        "00:00:00"
     }
 }
 
