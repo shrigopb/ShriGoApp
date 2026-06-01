@@ -57,7 +57,7 @@ fun LoginScreen(
 
                     userId =
                         it.userId ?: 0,
-
+userUniqueId = it.uniqueId,
                     firstName =
                         it.firstName,
 

@@ -18,6 +18,7 @@ class SessionManager(
     fun saveLoginSession(
 
         userId: Int,
+        userUniqueId: String?,
         firstName: String?,
         lastName: String?,
         email: String?,
@@ -34,6 +35,10 @@ class SessionManager(
             .putInt(
                 "userId",
                 userId
+            )
+            .putString(
+                "userUniqueId",
+                userUniqueId
             )
             .putString(
                 "firstName",
@@ -75,7 +80,14 @@ class SessionManager(
                 0
             )
     }
+    fun getUserUniqueId(): String {
 
+        return sharedPreferences
+            .getString(
+                "userUniqueId",
+                ""
+            ) ?: ""
+    }
     fun getFirstName(): String {
 
         return sharedPreferences
