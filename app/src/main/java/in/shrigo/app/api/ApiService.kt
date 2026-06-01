@@ -11,6 +11,7 @@ import `in`.shrigo.app.models.ProfileResponse
 import retrofit2.http.Path
 import `in`.shrigo.app.models.UploadRideRequest
 import `in`.shrigo.app.models.UploadRideResponse
+import `in`.shrigo.app.models.MyRideResponse
 
 interface ApiService {
     //--------------------------------------
@@ -60,6 +61,17 @@ interface ApiService {
         UploadRideRequest
 
     ): Response<UploadRideResponse>
+
+    //---------------------------------
+    //Get My Rides
+    //----------------------------------
+    @GET("api/RideApi/myrides/{uniqueId}")
+    suspend fun getMyRides(
+
+        @Path("uniqueId")
+        uniqueId: String
+
+    ): Response<List<MyRideResponse>>
 
 
 }
