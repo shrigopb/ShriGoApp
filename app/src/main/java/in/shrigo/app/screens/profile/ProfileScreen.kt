@@ -135,14 +135,14 @@ fun ProfileScreen(
                 error != null -> {
 
                     Text(
-                        text =
-                            error ?: ""
+                        text = error ?: ""
                     )
                 }
 
                 profile != null -> {
 
                     Text(
+
                         text =
 
                             "${profile!!.firstName} " +
@@ -159,15 +159,12 @@ fun ProfileScreen(
 
                     Text(
                         text =
-                            profile!!.role
-                                ?: ""
+                            profile!!.role ?: ""
                     )
 
                     Spacer(
                         modifier =
-                            Modifier.height(
-                                24.dp
-                            )
+                            Modifier.height(24.dp)
                     )
 
                     ProfileItem(
@@ -185,10 +182,11 @@ fun ProfileScreen(
                         profile!!.age
                     )
 
-                    // Driver only
                     if (
-                        role ==
-                        "Driver"
+                        role.equals(
+                            "Driver",
+                            true
+                        )
                     ) {
 
                         Spacer(
@@ -199,6 +197,7 @@ fun ProfileScreen(
                         )
 
                         Text(
+
                             text =
                                 "Vehicle Details",
 
@@ -242,45 +241,43 @@ fun ProfileScreen(
                                 .subscription
                         )
                     }
-
-                    Spacer(
-                        modifier =
-                            Modifier.height(
-                                30.dp
-                            )
-                    )
-
-                    Button(
-
-                        onClick = {
-
-                            sessionManager
-                                .logout()
-
-                            navController
-                                .navigate(
-
-                                    "${Routes.HOME}/Guest"
-
-                                ) {
-
-                                    popUpTo(0)
-
-                                    launchSingleTop =
-                                        true
-                                }
-                        },
-
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                    ) {
-
-                        Text(
-                            "Logout"
-                        )
-                    }
                 }
+            }
+            Spacer(
+                modifier =
+                    Modifier.height(
+                        30.dp
+                    )
+            )
+
+            Button(
+
+                onClick = {
+
+                    sessionManager
+                        .logout()
+
+                    navController
+                        .navigate(
+                            Routes.LOGIN
+                        ) {
+
+                            popUpTo(0)
+
+                            launchSingleTop =
+                                true
+                        }
+                },
+
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+
+            ) {
+
+                Text(
+                    "Logout"
+                )
             }
         }
     }
