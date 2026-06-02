@@ -90,7 +90,8 @@ class UploadRideViewModel : ViewModel() {
 
         rideId: Int,
 
-        request: UploadRideRequest
+        request:
+        UploadRideRequest
 
     ) {
 
@@ -98,22 +99,70 @@ class UploadRideViewModel : ViewModel() {
 
             try {
 
-                RetrofitClient
-                    .api
-                    .updateRide(
+                Log.d(
+                    "UPDATE_RIDE",
+                    "Button clicked"
+                )
 
-                        rideId,
+                _isLoading.value =
+                    true
 
-                        request
-                    )
+                val response =
 
-            } catch (e: Exception) {
+                    RetrofitClient
+                        .api
+                        .updateRide(
+
+                            rideId,
+
+                            request
+                        )
+
+                Log.d(
+                    "UPDATE_RIDE",
+                    "Code = ${response.code()}"
+                )
+
+                Log.d(
+                    "UPDATE_RIDE",
+                    "Body = ${response.body()}"
+                )
+
+                if (
+
+                    response.isSuccessful
+                    &&
+                    response.body()?.success == true
+
+                ) {
+
+                    _uploadSuccess.value =
+                        true
+
+                } else {
+
+                    _error.value =
+
+                        response.body()?.message
+                            ?: "Update Failed"
+                }
+
+            } catch (
+                e: Exception
+            ) {
 
                 Log.e(
                     "UPDATE_RIDE",
-                    e.message.toString()
+                    e.message
+                        ?: "Unknown Error"
                 )
+
+                _error.value =
+                    e.message
             }
+
+            _isLoading.value =
+                false
         }
     }
 }

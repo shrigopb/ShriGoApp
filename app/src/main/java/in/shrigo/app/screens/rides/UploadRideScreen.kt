@@ -895,7 +895,7 @@ fun UploadRideScreen(
     }
 }
 //Convertor ampmtime
-private fun convertTo24Hour(ampmTime: String): String {
+fun convertTo24Hour(ampmTime: String): String {
 
     return try {
 

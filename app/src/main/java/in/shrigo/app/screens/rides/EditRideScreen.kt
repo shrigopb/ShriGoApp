@@ -1,6 +1,7 @@
 package `in`.shrigo.app.screens.rides
 
 import android.app.DatePickerDialog
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -15,6 +16,10 @@ import java.util.Locale
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.ui.platform.LocalContext
 import `in`.shrigo.app.models.UploadRideRequest
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import `in`.shrigo.app.navigation.Routes
+
 
 @OptIn(
     ExperimentalMaterial3Api::class
@@ -30,8 +35,26 @@ fun EditRideScreen(
         viewModel()
 
 ) {
+    val viewModel:
+            UploadRideViewModel =
+        viewModel()
     val context =
         LocalContext.current
+
+    val uploadSuccess by
+    viewModel
+        .uploadSuccess
+        .collectAsState()
+
+    val isLoading by
+    viewModel
+        .isLoading
+        .collectAsState()
+
+    val error by
+    viewModel
+        .error
+        .collectAsState()
     val existingRide =
 
         navController
@@ -40,13 +63,45 @@ fun EditRideScreen(
             ?.get<MyRideResponse>(
                 "ride"
             )
+    LaunchedEffect(uploadSuccess) {
 
+        if (uploadSuccess) {
+
+            Toast.makeText(
+
+                context,
+
+                "Ride Updated Successfully",
+
+                Toast.LENGTH_SHORT
+
+            ).show()
+
+            navController.navigate(
+                Routes.MY_RIDES
+            ) {
+
+                popUpTo(
+                    Routes.EDIT_RIDE
+                ) {
+                    inclusive = true
+                }
+
+                launchSingleTop =
+                    true
+            }
+        }
+    }
     Column(
 
         modifier =
             Modifier
                 .fillMaxSize()
                 .padding(16.dp)
+                .padding(bottom = 100.dp)
+                .verticalScroll(
+                    rememberScrollState()
+                )
 
     ) {
 
@@ -95,8 +150,15 @@ fun EditRideScreen(
             )
         }
         var rideTime by remember {
+
             mutableStateOf(
-                existingRide?.rideTime ?: ""
+
+                existingRide?.rideTime
+                    ?.let {
+
+                        convertToAmPm(it)
+
+                    } ?: ""
             )
         }
         var rideSeats by remember {
@@ -171,7 +233,15 @@ fun EditRideScreen(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .menuAnchor()
+                        .menuAnchor(),
+                trailingIcon = {
+
+                    ExposedDropdownMenuDefaults
+                        .TrailingIcon(
+                            expanded =
+                                expandedSource
+                        )
+                }
             )
 
             ExposedDropdownMenu(
@@ -270,7 +340,15 @@ fun EditRideScreen(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .menuAnchor()
+                        .menuAnchor(),
+                trailingIcon = {
+
+                    ExposedDropdownMenuDefaults
+                        .TrailingIcon(
+                            expanded =
+                                expandedSource
+                        )
+                }
             )
 
             ExposedDropdownMenu(
@@ -347,7 +425,15 @@ fun EditRideScreen(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .menuAnchor()
+                        .menuAnchor(),
+                trailingIcon = {
+
+                    ExposedDropdownMenuDefaults
+                        .TrailingIcon(
+                            expanded =
+                                expandedSource
+                        )
+                }
             )
 
             ExposedDropdownMenu(
@@ -540,7 +626,15 @@ fun EditRideScreen(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .menuAnchor()
+                        .menuAnchor(),
+                trailingIcon = {
+
+                    ExposedDropdownMenuDefaults
+                        .TrailingIcon(
+                            expanded =
+                                expandedSource
+                        )
+                }
             )
 
             ExposedDropdownMenu(
@@ -621,7 +715,15 @@ fun EditRideScreen(
                 modifier =
                     Modifier
                         .fillMaxWidth()
-                        .menuAnchor()
+                        .menuAnchor(),
+                trailingIcon = {
+
+                    ExposedDropdownMenuDefaults
+                        .TrailingIcon(
+                            expanded =
+                                expandedSource
+                        )
+                }
             )
 
             ExposedDropdownMenu(
@@ -766,61 +868,74 @@ fun EditRideScreen(
 
             onClick = {
 
-                val request =
+                android.util.Log.d(
+                    "UPDATE_RIDE",
+                    "Button clicked"
+                )
 
+                val request =
                     UploadRideRequest(
 
-                        rideDate =
-                            rideDate,
-
-                        rideSource =
-                            rideSource,
-
-                        rideDesti =
-                            rideDesti,
-
-                        rideVia =
-                            rideVia,
-
-                        rideTime =
-                            rideTime,
-
-                        rideSeats =
-                            rideSeats,
-
-                        ridePrice =
-                            ridePrice,
-
-                        driverContact =
-                            driverPhone,
-
+                        rideDate = rideDate,
+                        rideSource = rideSource,
+                        rideDesti = rideDesti,
+                        rideVia = rideVia,
+                        rideTime = convertTo24Hour(rideTime),
+                        rideSeats = rideSeats,
+                        ridePrice = ridePrice,
+                        driverContact = driverPhone,
                         driverUniqueId =
-                            existingRide?.driverUniqueId
-                                ?: "",
-
+                            existingRide?.driverUniqueId ?: "",
                         driverFirstName =
                             driverName
                     )
 
-                existingRide?.rideId?.let {
-
-                    uploadRideViewModel.updateRide(
-
-                        it,
-
-                        request
-                    )
-                }
-            },
-
-            modifier =
-                Modifier.fillMaxWidth()
-
+                viewModel.updateRide(
+                    existingRide?.rideId ?: 0,
+                    request
+                )
+            }
         ) {
 
             Text(
                 "Update Ride"
             )
         }
+    }
+
+}
+
+private fun convertToAmPm(
+    time24: String
+): String {
+
+    return try {
+
+        val inputFormat =
+
+            SimpleDateFormat(
+                "HH:mm:ss",
+                Locale.ENGLISH
+            )
+
+        val outputFormat =
+
+            SimpleDateFormat(
+                "hh:mm a",
+                Locale.ENGLISH
+            )
+
+        val date =
+            inputFormat.parse(
+                time24
+            )
+
+        outputFormat.format(
+            date!!
+        ).lowercase()
+
+    } catch (e: Exception) {
+
+        time24
     }
 }
