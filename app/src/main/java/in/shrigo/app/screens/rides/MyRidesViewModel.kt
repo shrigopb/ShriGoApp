@@ -59,7 +59,15 @@ class MyRidesViewModel
             StateFlow<
                     String?
                     > = _error
+    private val _deleteSuccess =
 
+        MutableStateFlow(
+            false
+        )
+
+    val deleteSuccess:
+            StateFlow<Boolean> =
+        _deleteSuccess
     //-----------------------------------
     // Load My Rides
     //-----------------------------------
@@ -112,7 +120,9 @@ class MyRidesViewModel
         rideId: Int,
         uniqueId: String
 
-    ) {
+    )
+
+    {
 
         viewModelScope.launch {
 
@@ -137,10 +147,20 @@ class MyRidesViewModel
                 success
             ) {
 
+                _deleteSuccess.value =
+                    true
+
                 loadMyRides(
                     uniqueId
                 )
             }
         }
     }
+
+    fun clearDeleteSuccess() {
+
+        _deleteSuccess.value =
+            false
+    }
+
 }

@@ -1,6 +1,7 @@
 package `in`.shrigo.app.screens.rides
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -84,6 +85,17 @@ fun MyRidesScreen(
         .isLoading
         .collectAsState()
 
+    var rideToDelete by remember {
+
+        mutableStateOf<
+                MyRideResponse?
+                >(null)
+    }
+    val deleteSuccess by
+
+    viewModel
+        .deleteSuccess
+        .collectAsState()
     //-----------------------------------
     // Upload permission
     //-----------------------------------
@@ -118,7 +130,28 @@ fun MyRidesScreen(
                 uniqueId
             )
     }
+    LaunchedEffect(
+        deleteSuccess
+    ) {
 
+        if (
+            deleteSuccess
+        ) {
+
+            Toast.makeText(
+
+                context,
+
+                "Ride Deleted Successfully",
+
+                Toast.LENGTH_SHORT
+
+            ).show()
+
+            viewModel
+                .clearDeleteSuccess()
+        }
+    }
     //-----------------------------------
     // UI
     //-----------------------------------
@@ -242,13 +275,8 @@ fun MyRidesScreen(
 
                                 onDelete = {
 
-                                    viewModel
-                                        .deleteRide(
-
-                                            ride.rideId,
-
-                                            uniqueId
-                                        )
+                                    rideToDelete =
+                                        ride
                                 }
                             )
                         }
@@ -257,6 +285,82 @@ fun MyRidesScreen(
             }
         }
     }
+
+    //-----------------------------------
+    // Delete Confirmation Dialog
+    //-----------------------------------
+
+    if (
+        rideToDelete != null
+    ) {
+
+        AlertDialog(
+
+            onDismissRequest = {
+
+                rideToDelete =
+                    null
+            },
+
+            title = {
+
+                Text(
+                    "Delete Ride"
+                )
+            },
+
+            text = {
+
+                Text(
+                    "Are you sure you want to delete this ride?"
+                )
+            },
+
+            confirmButton = {
+
+                TextButton(
+
+                    onClick = {
+
+                        viewModel
+                            .deleteRide(
+
+                                rideToDelete!!
+                                    .rideId,
+
+                                uniqueId
+                            )
+
+                        rideToDelete =
+                            null
+                    }
+                ) {
+
+                    Text(
+                        "Delete"
+                    )
+                }
+            },
+
+            dismissButton = {
+
+                TextButton(
+
+                    onClick = {
+
+                        rideToDelete =
+                            null
+                    }
+                ) {
+
+                    Text(
+                        "Cancel"
+                    )
+                }
+            }
+        )
+    }
+
 }
 
 @Composable
@@ -406,4 +510,5 @@ fun RideCard(
             )
         }
     }
+
 }
