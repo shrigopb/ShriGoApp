@@ -1,7 +1,9 @@
 package `in`.shrigo.app.screens.rides
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import `in`.shrigo.app.api.RetrofitClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -80,6 +82,37 @@ class UploadRideViewModel : ViewModel() {
 
                 _isLoading.value =
                     false
+            }
+        }
+    }
+
+    fun updateRide(
+
+        rideId: Int,
+
+        request: UploadRideRequest
+
+    ) {
+
+        viewModelScope.launch {
+
+            try {
+
+                RetrofitClient
+                    .api
+                    .updateRide(
+
+                        rideId,
+
+                        request
+                    )
+
+            } catch (e: Exception) {
+
+                Log.e(
+                    "UPDATE_RIDE",
+                    e.message.toString()
+                )
             }
         }
     }
