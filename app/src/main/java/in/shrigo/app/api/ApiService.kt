@@ -13,6 +13,7 @@ import `in`.shrigo.app.models.UploadRideRequest
 import `in`.shrigo.app.models.UploadRideResponse
 import `in`.shrigo.app.models.MyRideResponse
 import retrofit2.http.DELETE
+import retrofit2.http.PUT
 
 interface ApiService {
     //--------------------------------------
@@ -88,4 +89,20 @@ interface ApiService {
         rideId: Int
 
     ): Response<Unit>
+
+    //---------------------------------
+    // Update Ride
+    //---------------------------------
+    @PUT(
+        "api/RideApi/updateride/{rideId}"
+    )
+    suspend fun updateRide(
+
+        @Path("rideId")
+        rideId: Int,
+
+        @Body
+        request: UploadRideRequest
+
+    ): Response<String>
 }

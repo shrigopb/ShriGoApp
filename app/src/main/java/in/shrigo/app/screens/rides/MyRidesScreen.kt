@@ -273,6 +273,14 @@ fun MyRidesScreen(
 
                                 ride = ride,
 
+                                onEdit = {
+
+                                    Log.d(
+                                        "EDIT_RIDE",
+                                        "RideId = ${ride.rideId}"
+                                    )
+                                },
+
                                 onDelete = {
 
                                     rideToDelete =
@@ -368,7 +376,7 @@ fun RideCard(
 
     ride:
     MyRideResponse,
-
+    onEdit: () -> Unit,
     onDelete:
         () -> Unit
 
@@ -429,29 +437,62 @@ fun RideCard(
                     )
             )
 
-            Button(
+            Row(
 
-                onClick = {
+                modifier =
+                    Modifier.fillMaxWidth(),
 
-                    onDelete()
-                },
-
-                colors =
-
-                    ButtonDefaults
-                        .buttonColors(
-
-                            containerColor =
-                                MaterialTheme
-                                    .colorScheme
-                                    .error
-                        )
+                horizontalArrangement =
+                    Arrangement.spacedBy(
+                        8.dp
+                    )
             ) {
 
-                Text(
-                    "Delete Ride"
-                )
+                Button(
+
+                    onClick = {
+
+                        onEdit()
+                    },
+
+                    modifier =
+                        Modifier.weight(1f)
+
+                ) {
+
+                    Text(
+                        "Edit Ride"
+                    )
+                }
+
+                Button(
+
+                    onClick = {
+
+                        onDelete()
+                    },
+
+                    modifier =
+                        Modifier.weight(1f),
+
+                    colors =
+
+                        ButtonDefaults
+                            .buttonColors(
+
+                                containerColor =
+                                    MaterialTheme
+                                        .colorScheme
+                                        .error
+                            )
+                ) {
+
+                    Text(
+                        "Delete Ride"
+                    )
+                }
             }
+
             //-----------------------------------
             // Time formatting
             //-----------------------------------

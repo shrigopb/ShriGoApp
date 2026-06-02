@@ -3,6 +3,8 @@ package `in`.shrigo.app.repository
 import `in`.shrigo.app.api.RetrofitClient
 import `in`.shrigo.app.models.MyRideResponse
 import android.util.Log
+import `in`.shrigo.app.models.UploadRideRequest
+
 class MyRidesRepository {
 
 
@@ -99,5 +101,29 @@ class MyRidesRepository {
 
             false
         }
+    }
+    //-------------------
+    //Update Ride
+    //---------------------
+    suspend fun updateRide(
+
+        rideId: Int,
+
+        request: UploadRideRequest
+
+    ): Boolean {
+
+        val response =
+
+            RetrofitClient
+                .api
+                .updateRide(
+
+                    rideId,
+
+                    request
+                )
+
+        return response.isSuccessful
     }
 }
