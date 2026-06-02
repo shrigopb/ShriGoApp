@@ -55,4 +55,49 @@ class MyRidesRepository {
             emptyList()
         }
     }
+    //---------------------------
+    //Delete selected rides
+    //---------------------------
+    suspend fun deleteRide(
+
+        rideId: Int
+
+    ): Boolean {
+
+        return try {
+
+            val response =
+
+                RetrofitClient
+                    .api
+                    .deleteRide(
+                        rideId
+                    )
+
+            Log.d(
+                "DELETE_API",
+                "Code = ${response.code()}"
+            )
+
+            Log.d(
+                "DELETE_API",
+                "Success = ${response.isSuccessful}"
+            )
+
+            response
+                .isSuccessful
+
+        } catch (
+            e: Exception
+        ) {
+
+            Log.e(
+                "DELETE_API",
+                e.message
+                    ?: "Error"
+            )
+
+            false
+        }
+    }
 }

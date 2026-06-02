@@ -1,5 +1,6 @@
 package `in`.shrigo.app.screens.rides
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import `in`.shrigo.app.models.MyRideResponse
@@ -100,6 +101,46 @@ class MyRidesViewModel
 
             _isLoading.value =
                 false
+        }
+    }
+
+    //------------------------
+    //Delete selected Ride
+    //--------------------------
+    fun deleteRide(
+
+        rideId: Int,
+        uniqueId: String
+
+    ) {
+
+        viewModelScope.launch {
+
+            Log.d(
+                "DELETE_RIDE",
+                "RideId = $rideId"
+            )
+
+            val success =
+
+                repository
+                    .deleteRide(
+                        rideId
+                    )
+
+            Log.d(
+                "DELETE_RIDE",
+                "Success = $success"
+            )
+
+            if (
+                success
+            ) {
+
+                loadMyRides(
+                    uniqueId
+                )
+            }
         }
     }
 }

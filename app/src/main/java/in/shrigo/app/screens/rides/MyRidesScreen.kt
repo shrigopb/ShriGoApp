@@ -237,7 +237,19 @@ fun MyRidesScreen(
                         ) { ride ->
 
                             RideCard(
-                                ride
+
+                                ride = ride,
+
+                                onDelete = {
+
+                                    viewModel
+                                        .deleteRide(
+
+                                            ride.rideId,
+
+                                            uniqueId
+                                        )
+                                }
                             )
                         }
                     }
@@ -251,7 +263,10 @@ fun MyRidesScreen(
 fun RideCard(
 
     ride:
-    MyRideResponse
+    MyRideResponse,
+
+    onDelete:
+        () -> Unit
 
 ) {
 
@@ -303,7 +318,36 @@ fun RideCard(
                 text =
                     "Date: ${ride.rideDate}"
             )
+            Spacer(
+                modifier =
+                    Modifier.height(
+                        12.dp
+                    )
+            )
 
+            Button(
+
+                onClick = {
+
+                    onDelete()
+                },
+
+                colors =
+
+                    ButtonDefaults
+                        .buttonColors(
+
+                            containerColor =
+                                MaterialTheme
+                                    .colorScheme
+                                    .error
+                        )
+            ) {
+
+                Text(
+                    "Delete Ride"
+                )
+            }
             //-----------------------------------
             // Time formatting
             //-----------------------------------

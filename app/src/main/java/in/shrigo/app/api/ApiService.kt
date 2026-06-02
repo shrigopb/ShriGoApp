@@ -12,6 +12,7 @@ import retrofit2.http.Path
 import `in`.shrigo.app.models.UploadRideRequest
 import `in`.shrigo.app.models.UploadRideResponse
 import `in`.shrigo.app.models.MyRideResponse
+import retrofit2.http.DELETE
 
 interface ApiService {
     //--------------------------------------
@@ -73,5 +74,18 @@ interface ApiService {
 
     ): Response<List<MyRideResponse>>
 
+    //------------------------------
+    // Delete selected ride
+    //---------------------------------
+    @DELETE(
+        "api/RideApi/delete/{rideId}"
+    )
+    suspend fun deleteRide(
 
+        @Path(
+            "rideId"
+        )
+        rideId: Int
+
+    ): Response<Unit>
 }
