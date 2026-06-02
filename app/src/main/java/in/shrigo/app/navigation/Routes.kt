@@ -11,4 +11,7 @@ object Routes {
     const val PROFILE = "profile"
     const val UPLOAD_RIDE = "upload_ride"
 
+    // NEW
+    const val EDIT_RIDE = "edit_ride"
+
 }

@@ -275,9 +275,16 @@ fun MyRidesScreen(
 
                                 onEdit = {
 
-                                    Log.d(
-                                        "EDIT_RIDE",
-                                        "RideId = ${ride.rideId}"
+                                    navController
+                                        .currentBackStackEntry
+                                        ?.savedStateHandle
+                                        ?.set(
+                                            "ride",
+                                            ride
+                                        )
+
+                                    navController.navigate(
+                                        Routes.EDIT_RIDE
                                     )
                                 },
 
