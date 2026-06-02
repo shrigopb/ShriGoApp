@@ -40,6 +40,10 @@ fun MyRidesScreen(
             )
         }
 
+    //-----------------------------------
+    // Session values
+    //-----------------------------------
+
     val role =
 
         sessionManager
@@ -49,7 +53,26 @@ fun MyRidesScreen(
 
         sessionManager
             .getUserUniqueId()
-            .toString()
+
+    //-----------------------------------
+    // Logs
+    //-----------------------------------
+    Log.d(
+        "MY_RIDES_ROLE",
+        "Role = '$role'"
+    )
+    Log.d(
+        "MY_RIDES",
+        "Role = $role"
+    )
+    Log.d(
+        "MY_RIDES",
+        "UniqueId = $uniqueId"
+    )
+
+    //-----------------------------------
+    // ViewModel state
+    //-----------------------------------
 
     val rides by
     viewModel
@@ -61,19 +84,26 @@ fun MyRidesScreen(
         .isLoading
         .collectAsState()
 
+    //-----------------------------------
+    // Upload permission
+    //-----------------------------------
     val canUpload =
 
-        role.equals(
-            "Driver",
-            true
-        )
+        role
+            .trim()
+            .equals(
+                "Driver",
+                ignoreCase = true
+            )
 
                 ||
 
-                role.equals(
-                    "Admin",
-                    true
-                )
+                role
+                    .trim()
+                    .equals(
+                        "Admin",
+                        ignoreCase = true
+                    )
 
     //-----------------------------------
     // Load rides
@@ -83,15 +113,15 @@ fun MyRidesScreen(
         Unit
     ) {
 
-        Log.d(
-            "MY_RIDES",
-            "UniqueId = $uniqueId"
-        )
         viewModel
             .loadMyRides(
                 uniqueId
             )
     }
+
+    //-----------------------------------
+    // UI
+    //-----------------------------------
 
     Scaffold(
 
@@ -110,7 +140,13 @@ fun MyRidesScreen(
                                 Routes
                                     .UPLOAD_RIDE
                             )
-                    }
+                    },
+
+                    modifier =
+                        Modifier
+                            .padding(
+                                bottom = 70.dp
+                            )
 
                 ) {
 
@@ -124,7 +160,10 @@ fun MyRidesScreen(
                     )
                 }
             }
-        }
+        },
+
+        floatingActionButtonPosition =
+            FabPosition.End
 
     ) { paddingValues ->
 
@@ -138,6 +177,9 @@ fun MyRidesScreen(
                         paddingValues
                     )
                     .padding(16.dp)
+                    .padding(
+                        bottom = 80.dp
+                    )
         ) {
 
             Text(
@@ -182,7 +224,12 @@ fun MyRidesScreen(
                             Arrangement
                                 .spacedBy(
                                     12.dp
-                                )
+                                ),
+
+                        contentPadding =
+                            PaddingValues(
+                                bottom = 80.dp
+                            )
                     ) {
 
                         items(
@@ -256,6 +303,10 @@ fun RideCard(
                 text =
                     "Date: ${ride.rideDate}"
             )
+
+            //-----------------------------------
+            // Time formatting
+            //-----------------------------------
 
             val formattedTime = try {
 
