@@ -432,8 +432,38 @@ fun RideCard(
                 "-"
             }
             // DATE + TIME
+            val displayDate = try {
+
+                val rideDate =
+
+                    java.time.LocalDate.parse(
+                        ride.rideDate
+                    )
+
+                val today =
+
+                    java.time.LocalDate.now()
+
+                when (rideDate) {
+
+                    today ->
+                        "Today"
+
+                    today.plusDays(1) ->
+                        "Tomorrow"
+
+                    else ->
+                        ride.rideDate ?: "-"
+                }
+
+            } catch (
+                e: Exception
+            ) {
+
+                ride.rideDate ?: "-"
+            }
             Text(
-                text = "${ride.rideDate ?: "-"} • $formattedTime",
+                text = "$displayDate • $formattedTime",
                 style = MaterialTheme.typography.bodySmall,
                 color = Color(0xFF2E7D32),
                 fontWeight = FontWeight.SemiBold
