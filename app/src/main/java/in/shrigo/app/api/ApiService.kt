@@ -12,6 +12,8 @@ import retrofit2.http.Path
 import `in`.shrigo.app.models.UploadRideRequest
 import `in`.shrigo.app.models.UploadRideResponse
 import `in`.shrigo.app.models.MyRideResponse
+import `in`.shrigo.app.models.SignupRequest
+import `in`.shrigo.app.models.SignupResponse
 import `in`.shrigo.app.models.UpdateRideResponse
 import retrofit2.http.DELETE
 import retrofit2.http.PUT
@@ -106,4 +108,19 @@ interface ApiService {
         request: UploadRideRequest
 
     ): Response<UpdateRideResponse>
+
+    //--------------------------------------
+    // Signup API
+    //--------------------------------------
+    @POST(
+        "api/SignupApi"
+    )
+    suspend fun signupUser(
+
+        @Body
+        request:
+        SignupRequest
+
+    ): Response<SignupResponse>
+
 }

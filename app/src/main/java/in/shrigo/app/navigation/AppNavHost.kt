@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.*
 import `in`.shrigo.app.screens.auth.LoginScreen
+import `in`.shrigo.app.screens.auth.SignupScreen
 import `in`.shrigo.app.screens.bookings.BookingScreen
 import `in`.shrigo.app.screens.home.HomeScreen
 import `in`.shrigo.app.screens.rides.MyRidesScreen
@@ -50,9 +51,12 @@ fun AppNavHost() {
         bottomBar = {
 
             if (
+
                 currentRoute != Routes.SPLASH
                 &&
                 currentRoute != Routes.LOGIN
+                &&
+                currentRoute != Routes.SIGNUP
             ) {
 
                 NavigationBar(
@@ -251,6 +255,21 @@ fun AppNavHost() {
                     }
                 }
             }
+            //---------------------------
+            //Signup
+            //--------------------------
+            // Signup
+            composable(
+                Routes.SIGNUP
+            ) {
+
+                SignupScreen(
+                    navController
+                )
+            }
+            //---------------------------
+            //UPLOAD_RIDE
+            //---------------------------
             composable(
                 Routes.UPLOAD_RIDE
             ) {
