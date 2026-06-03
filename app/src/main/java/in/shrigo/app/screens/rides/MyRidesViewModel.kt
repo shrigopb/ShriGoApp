@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import `in`.shrigo.app.models.MyRideResponse
+import `in`.shrigo.app.models.UploadRideRequest
 import `in`.shrigo.app.repository.MyRidesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -161,6 +162,40 @@ class MyRidesViewModel
 
         _deleteSuccess.value =
             false
+    }
+
+    //-------------------------
+    //Update Ride
+    //-------------------------
+    fun updateRide(
+
+        rideId: Int,
+
+        request: UploadRideRequest,
+
+        uniqueId: String
+
+    ) {
+
+        viewModelScope.launch {
+
+            val success =
+
+                repository
+                    .updateRide(
+
+                        rideId,
+
+                        request
+                    )
+
+            if (success) {
+
+                loadMyRides(
+                    uniqueId
+                )
+            }
+        }
     }
 
 }

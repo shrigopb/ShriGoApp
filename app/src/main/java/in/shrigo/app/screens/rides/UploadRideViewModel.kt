@@ -1,7 +1,9 @@
 package `in`.shrigo.app.screens.rides
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import `in`.shrigo.app.api.RetrofitClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -81,6 +83,86 @@ class UploadRideViewModel : ViewModel() {
                 _isLoading.value =
                     false
             }
+        }
+    }
+
+    fun updateRide(
+
+        rideId: Int,
+
+        request:
+        UploadRideRequest
+
+    ) {
+
+        viewModelScope.launch {
+
+            try {
+
+                Log.d(
+                    "UPDATE_RIDE",
+                    "Button clicked"
+                )
+
+                _isLoading.value =
+                    true
+
+                val response =
+
+                    RetrofitClient
+                        .api
+                        .updateRide(
+
+                            rideId,
+
+                            request
+                        )
+
+                Log.d(
+                    "UPDATE_RIDE",
+                    "Code = ${response.code()}"
+                )
+
+                Log.d(
+                    "UPDATE_RIDE",
+                    "Body = ${response.body()}"
+                )
+
+                if (
+
+                    response.isSuccessful
+                    &&
+                    response.body()?.success == true
+
+                ) {
+
+                    _uploadSuccess.value =
+                        true
+
+                } else {
+
+                    _error.value =
+
+                        response.body()?.message
+                            ?: "Update Failed"
+                }
+
+            } catch (
+                e: Exception
+            ) {
+
+                Log.e(
+                    "UPDATE_RIDE",
+                    e.message
+                        ?: "Unknown Error"
+                )
+
+                _error.value =
+                    e.message
+            }
+
+            _isLoading.value =
+                false
         }
     }
 }

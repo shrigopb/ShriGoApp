@@ -13,6 +13,7 @@ import `in`.shrigo.app.screens.profile.ProfileScreen
 import `in`.shrigo.app.screens.splash.SplashScreen
 import `in`.shrigo.app.utils.SessionManager
 import `in`.shrigo.app.screens.rides.UploadRideScreen
+import `in`.shrigo.app.screens.rides.EditRideScreen
 
 @Composable
 fun AppNavHost() {
@@ -250,7 +251,24 @@ fun AppNavHost() {
                     }
                 }
             }
-            composable( Routes.UPLOAD_RIDE ) { UploadRideScreen( navController ) }
+            composable(
+                Routes.UPLOAD_RIDE
+            ) {
+
+                UploadRideScreen(
+                    navController
+                )
+            }
+            composable(
+                Routes.EDIT_RIDE
+            ) {
+
+                EditRideScreen(
+                    navController =
+                        navController
+                )
+            }
+
             // Bookings
             composable(
                 Routes.BOOKINGS

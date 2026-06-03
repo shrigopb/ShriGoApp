@@ -12,7 +12,9 @@ import retrofit2.http.Path
 import `in`.shrigo.app.models.UploadRideRequest
 import `in`.shrigo.app.models.UploadRideResponse
 import `in`.shrigo.app.models.MyRideResponse
+import `in`.shrigo.app.models.UpdateRideResponse
 import retrofit2.http.DELETE
+import retrofit2.http.PUT
 
 interface ApiService {
     //--------------------------------------
@@ -21,6 +23,7 @@ interface ApiService {
     //Ride Info API
     @GET("api/RideApi/active")
     suspend fun getRides(): List<Ride>
+
     //Profile Info API
     @GET(
         "api/ProfileApi/{userId}/{role}"
@@ -48,7 +51,6 @@ interface ApiService {
         @Body request: LoginRequest
 
     ): Response<LoginResponse>
-
 
 
 //--------------------------------------
@@ -88,4 +90,20 @@ interface ApiService {
         rideId: Int
 
     ): Response<Unit>
+
+    //---------------------------------
+    // Update Ride
+    //---------------------------------
+    @PUT(
+        "api/RideApi/updateride/{rideId}"
+    )
+    suspend fun updateRide(
+
+        @Path("rideId")
+        rideId: Int,
+
+        @Body
+        request: UploadRideRequest
+
+    ): Response<UpdateRideResponse>
 }
