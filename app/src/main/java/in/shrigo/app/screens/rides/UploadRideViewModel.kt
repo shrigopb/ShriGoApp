@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import `in`.shrigo.app.api.RetrofitClient
+import `in`.shrigo.app.models.SignupRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -156,6 +157,59 @@ class UploadRideViewModel : ViewModel() {
                     e.message
                         ?: "Unknown Error"
                 )
+
+                _error.value =
+                    e.message
+            }
+
+            _isLoading.value =
+                false
+        }
+    }
+
+    //------------------------------------
+    //Signup
+    //--------------------------------------
+    fun signupUser(
+
+        request:
+        SignupRequest
+
+    ) {
+
+        viewModelScope.launch {
+
+            try {
+
+                _isLoading.value =
+                    true
+
+                val response =
+
+                    repository
+                        .signupUser(
+                            request
+                        )
+
+                if (
+                    response?.success
+                    == true
+                ) {
+
+                    _uploadSuccess
+                        .value = true
+
+                } else {
+
+                    _error.value =
+
+                        response?.message
+                            ?: "Signup Failed"
+                }
+
+            } catch (
+                e: Exception
+            ) {
 
                 _error.value =
                     e.message

@@ -14,4 +14,6 @@ object Routes {
     // NEW
     const val EDIT_RIDE = "edit_ride"
 
+    const val SIGNUP = "signup"
+
 }

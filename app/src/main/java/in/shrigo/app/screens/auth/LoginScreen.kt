@@ -300,6 +300,22 @@ userUniqueId = it.uniqueId,
                             .error
                 )
             }
+
+            TextButton(
+
+                onClick = {
+
+                    navController.navigate(
+                        Routes.SIGNUP
+                    )
+                }
+
+            ) {
+
+                Text(
+                    "Don't have an account? Sign Up"
+                )
+            }
         }
     }
 }
