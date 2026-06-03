@@ -1,5 +1,6 @@
 package `in`.shrigo.app.screens.splash
 
+
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -229,6 +230,28 @@ fun SplashScreen(
                     MaterialTheme
                         .typography
                         .bodyMedium
+            )
+            Spacer(
+                modifier =
+                    Modifier.height(
+                        10.dp
+                    )
+            )
+
+            val versionName =
+
+                context.packageManager
+                    .getPackageInfo(
+                        context.packageName,
+                        0
+                    ).versionName
+            Text(
+
+                text ="Version $versionName",
+                fontSize = 18.sp,
+
+                color = Color.LightGray.copy(alpha = 0.7f)
+
             )
         }
     }
