@@ -19,20 +19,25 @@ import `in`.shrigo.app.screens.rides.UploadRideViewModel
 @Composable
 fun SignupScreen(
 
-    navController:
-    NavController,
+    navController: NavController,
 
-    viewModel:
-    UploadRideViewModel =
+    viewModel: UploadRideViewModel =
         viewModel()
 
 ) {
 
-    val context =
-        LocalContext.current
+    val context = LocalContext.current
 
     //----------------------------------
-    // Form States
+    // Signup Type
+    //----------------------------------
+
+    var isPassenger by remember {
+        mutableStateOf(true)
+    }
+
+    //----------------------------------
+    // Common Fields
     //----------------------------------
 
     var firstName by remember {
@@ -64,50 +69,55 @@ fun SignupScreen(
     }
 
     //----------------------------------
-    // ViewModel States
+    // Driver Fields
+    //----------------------------------
+
+    var aadharNumber by remember {
+        mutableStateOf("")
+    }
+
+    var vehicleRegNo by remember {
+        mutableStateOf("")
+    }
+
+    var insuranceNo by remember {
+        mutableStateOf("")
+    }
+
+    var vehicleName by remember {
+        mutableStateOf("")
+    }
+
+    //----------------------------------
+    // ViewModel State
     //----------------------------------
 
     val isLoading by
-    viewModel
-        .isLoading
-        .collectAsState()
+    viewModel.isLoading.collectAsState()
 
     val uploadSuccess by
-    viewModel
-        .uploadSuccess
-        .collectAsState()
+    viewModel.uploadSuccess.collectAsState()
 
     val error by
-    viewModel
-        .error
-        .collectAsState()
+    viewModel.error.collectAsState()
 
     //----------------------------------
     // Success Navigation
     //----------------------------------
 
-    LaunchedEffect(
-        uploadSuccess
-    ) {
+    LaunchedEffect(uploadSuccess) {
 
-        if (
-            uploadSuccess
-        ) {
+        if (uploadSuccess) {
 
             Toast.makeText(
-
                 context,
-
                 "Signup Successful",
-
                 Toast.LENGTH_SHORT
-
             ).show()
 
             navController.navigate(
                 Routes.LOGIN
             ) {
-
                 popUpTo(
                     Routes.SIGNUP
                 ) {
@@ -125,17 +135,16 @@ fun SignupScreen(
 
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
             .verticalScroll(
                 rememberScrollState()
             )
+            .padding(16.dp)
 
     ) {
 
         Text(
 
-            text =
-                "Create Account",
+            text = "Create Account",
 
             style =
                 MaterialTheme
@@ -145,170 +154,183 @@ fun SignupScreen(
 
         Spacer(
             modifier =
-                Modifier.height(
-                    20.dp
-                )
+                Modifier.height(16.dp)
         )
 
         //----------------------------------
-        // First Name
+        // Passenger / Driver Toggle
         //----------------------------------
 
-        OutlinedTextField(
+//----------------------------------
+// Passenger / Driver Toggle
+//----------------------------------
 
-            value =
-                firstName,
+        Row(
 
+            horizontalArrangement =
+                Arrangement.spacedBy(12.dp)
+
+        ) {
+
+            // Passenger Button
+            if (isPassenger) {
+
+                Button(
+
+                    onClick = {
+                        isPassenger = true
+                    }
+
+                ) {
+
+                    Text("Passenger")
+                }
+
+            } else {
+
+                OutlinedButton(
+
+                    onClick = {
+                        isPassenger = true
+                    }
+
+                ) {
+
+                    Text("Passenger")
+                }
+            }
+
+            // Driver Button
+            if (!isPassenger) {
+
+                Button(
+
+                    onClick = {
+                        isPassenger = false
+                    }
+
+                ) {
+
+                    Text("Driver")
+                }
+
+            } else {
+
+                OutlinedButton(
+
+                    onClick = {
+                        isPassenger = false
+                    }
+
+                ) {
+
+                    Text("Driver")
+                }
+            }
+        }
+
+        Spacer(
+            modifier =
+                Modifier.height(24.dp)
+        )
+
+        //----------------------------------
+        // Common Fields
+        //----------------------------------
+
+        AppTextField(
+            value = firstName,
             onValueChange = {
-
                 firstName = it
             },
-
-            label = {
-                Text(
-                    "First Name"
-                )
-            },
-
-            modifier =
-                Modifier.fillMaxWidth()
+            label = "First Name *"
         )
 
-        Spacer(
-            modifier =
-                Modifier.height(12.dp)
-        )
-
-        //----------------------------------
-        // Last Name
-        //----------------------------------
-
-        OutlinedTextField(
-
-            value =
-                lastName,
-
+        AppTextField(
+            value = lastName,
             onValueChange = {
-
                 lastName = it
             },
-
-            label = {
-                Text(
-                    "Last Name"
-                )
-            },
-
-            modifier =
-                Modifier.fillMaxWidth()
+            label = "Last Name"
         )
 
-        Spacer(
-            modifier =
-                Modifier.height(12.dp)
-        )
-
-        //----------------------------------
-        // Age
-        //----------------------------------
-
-        OutlinedTextField(
-
-            value =
-                age,
-
+        AppTextField(
+            value = age,
             onValueChange = {
-
                 age = it
             },
-
-            label = {
-                Text("Age")
-            },
-
-            modifier =
-                Modifier.fillMaxWidth()
-        )
-
-        Spacer(
-            modifier =
-                Modifier.height(12.dp)
+            label = "Age"
         )
 
         //----------------------------------
-        // Email
+        // Driver Only Fields
         //----------------------------------
 
-        OutlinedTextField(
+        if (!isPassenger) {
 
-            value =
-                email,
+            AppTextField(
+                value = aadharNumber,
+                onValueChange = {
+                    aadharNumber = it
+                },
+                label = "Aadhar Number *"
+            )
 
+            AppTextField(
+                value = vehicleRegNo,
+                onValueChange = {
+                    vehicleRegNo = it
+                },
+                label = "Vehicle Reg No *"
+            )
+
+            AppTextField(
+                value = insuranceNo,
+                onValueChange = {
+                    insuranceNo = it
+                },
+                label = "Insurance No"
+            )
+
+            AppTextField(
+                value = vehicleName,
+                onValueChange = {
+                    vehicleName = it
+                },
+                label = "Vehicle Name"
+            )
+        }
+
+        //----------------------------------
+        // Remaining Common Fields
+        //----------------------------------
+
+        AppTextField(
+            value = email,
             onValueChange = {
-
                 email = it
             },
-
-            label = {
-                Text("Email")
-            },
-
-            modifier =
-                Modifier.fillMaxWidth()
+            label = "Email"
         )
 
-        Spacer(
-            modifier =
-                Modifier.height(12.dp)
-        )
-
-        //----------------------------------
-        // Contact
-        //----------------------------------
-
-        OutlinedTextField(
-
-            value =
-                contact,
-
+        AppTextField(
+            value = contact,
             onValueChange = {
-
                 contact = it
             },
-
-            label = {
-                Text(
-                    "Mobile Number"
-                )
-            },
-
-            modifier =
-                Modifier.fillMaxWidth()
+            label = "Mobile Number *"
         )
-
-        Spacer(
-            modifier =
-                Modifier.height(12.dp)
-        )
-
-        //----------------------------------
-        // Password
-        //----------------------------------
 
         OutlinedTextField(
 
-            value =
-                password,
+            value = password,
 
             onValueChange = {
-
                 password = it
             },
 
             label = {
-                Text(
-                    "Password"
-                )
+                Text("Password *")
             },
 
             visualTransformation =
@@ -323,24 +345,16 @@ fun SignupScreen(
                 Modifier.height(12.dp)
         )
 
-        //----------------------------------
-        // Confirm Password
-        //----------------------------------
-
         OutlinedTextField(
 
-            value =
-                confirmPassword,
+            value = confirmPassword,
 
             onValueChange = {
-
                 confirmPassword = it
             },
 
             label = {
-                Text(
-                    "Confirm Password"
-                )
+                Text("Confirm Password *")
             },
 
             visualTransformation =
@@ -363,11 +377,13 @@ fun SignupScreen(
 
             onClick = {
 
+                //----------------------------------
+                // Validation
+                //----------------------------------
+
                 if (
-                    firstName.isBlank()
-                    ||
-                    contact.isBlank()
-                    ||
+                    firstName.isBlank() ||
+                    contact.isBlank() ||
                     password.isBlank()
                 ) {
 
@@ -375,7 +391,7 @@ fun SignupScreen(
 
                         context,
 
-                        "Please fill mandatory fields",
+                        "Please fill mandatory fields (*)",
 
                         Toast.LENGTH_SHORT
 
@@ -385,8 +401,30 @@ fun SignupScreen(
                 }
 
                 if (
-                    password
-                    !=
+
+                    !isPassenger &&
+                    (
+                            aadharNumber.isBlank() ||
+                                    vehicleRegNo.isBlank()
+                            )
+
+                ) {
+
+                    Toast.makeText(
+
+                        context,
+
+                        "Please fill Driver mandatory fields",
+
+                        Toast.LENGTH_SHORT
+
+                    ).show()
+
+                    return@Button
+                }
+
+                if (
+                    password !=
                     confirmPassword
                 ) {
 
@@ -403,33 +441,34 @@ fun SignupScreen(
                     return@Button
                 }
 
-                val request =
+                //----------------------------------
+                // Passenger Signup
+                //----------------------------------
 
-                    SignupRequest(
+                val request = SignupRequest(
 
-                        passengerFirstName =
-                            firstName,
+                    passengerFirstName =
+                        firstName,
 
-                        passengerLastName =
-                            lastName,
+                    passengerLastName =
+                        lastName,
 
-                        passengerAge =
-                            age,
+                    passengerAge =
+                        age,
 
-                        passengerEmail =
-                            email,
+                    passengerEmail =
+                        email,
 
-                        passengerContact =
-                            contact,
+                    passengerContact =
+                        contact,
 
-                        passengerPswd =
-                            password
-                    )
+                    passengerPswd =
+                        password
+                )
 
-                viewModel
-                    .signupUser(
-                        request
-                    )
+                viewModel.signupUser(
+                    request
+                )
             },
 
             modifier =
@@ -439,14 +478,9 @@ fun SignupScreen(
 
             Text(
 
-                if (
-                    isLoading
-                )
-
+                if (isLoading)
                     "Creating Account..."
-
                 else
-
                     "Sign Up"
             )
         }
@@ -460,16 +494,14 @@ fun SignupScreen(
 
             onClick = {
 
-                navController
-                    .navigate(
-                        Routes.LOGIN
-                    )
+                navController.navigate(
+                    Routes.LOGIN
+                )
             }
 
         ) {
 
             Text(
-
                 "Already have an account? Login"
             )
         }
@@ -481,9 +513,40 @@ fun SignupScreen(
                     Modifier.height(12.dp)
             )
 
-            Text(
-                text = it
-            )
+            Text(text = it)
         }
     }
+}
+
+@Composable
+fun AppTextField(
+
+    value: String,
+
+    onValueChange:
+        (String) -> Unit,
+
+    label: String
+
+) {
+
+    OutlinedTextField(
+
+        value = value,
+
+        onValueChange =
+            onValueChange,
+
+        label = {
+            Text(label)
+        },
+
+        modifier =
+            Modifier.fillMaxWidth()
+    )
+
+    Spacer(
+        modifier =
+            Modifier.height(12.dp)
+    )
 }
