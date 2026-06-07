@@ -167,9 +167,9 @@ class UploadRideViewModel : ViewModel() {
         }
     }
 
-    //------------------------------------
-    //Signup
-    //--------------------------------------
+//------------------------------------
+// Signup
+//--------------------------------------
     fun signupUser(
 
         request:
@@ -184,6 +184,14 @@ class UploadRideViewModel : ViewModel() {
                 _isLoading.value =
                     true
 
+                _error.value =
+                    null
+
+                Log.d(
+                    "SIGNUP_REQUEST",
+                    "Signup request started for ${request.passengerContact}"
+                )
+
                 val response =
 
                     repository
@@ -191,15 +199,31 @@ class UploadRideViewModel : ViewModel() {
                             request
                         )
 
+                Log.d(
+                    "SIGNUP_RESPONSE",
+                    response.toString()
+                )
+
                 if (
                     response?.success
                     == true
                 ) {
 
+                    Log.d(
+                        "SIGNUP_SUCCESS",
+                        response.message
+                    )
+
                     _uploadSuccess
                         .value = true
 
                 } else {
+
+                    Log.e(
+                        "SIGNUP_FAILED",
+                        response?.message
+                            ?: "NULL MESSAGE"
+                    )
 
                     _error.value =
 
@@ -211,8 +235,16 @@ class UploadRideViewModel : ViewModel() {
                 e: Exception
             ) {
 
-                _error.value =
+                Log.e(
+                    "SIGNUP_EXCEPTION",
                     e.message
+                        ?: "Unknown Error"
+                )
+
+                _error.value =
+
+                    e.message
+                        ?: "Network error"
             }
 
             _isLoading.value =
