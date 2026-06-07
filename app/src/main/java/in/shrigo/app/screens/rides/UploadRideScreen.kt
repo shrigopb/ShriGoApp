@@ -222,7 +222,7 @@ fun UploadRideScreen(
             "ORR,Airport",
             "Airport,JBS",
             "Airport,HYD",
-            "Airport,JBS,HYD",
+            "Airport,HYD,JBS",
             "RYKL,KRTL,MTPL",
             "RYKL,KRTL,JGTL"
         )
@@ -331,7 +331,7 @@ fun UploadRideScreen(
             "ORR,Airport",
             "Airport,JBS",
             "Airport,HYD",
-            "Airport,JBS,HYD",
+            "Airport,HYD,JBS",
             "RYKL,KRTL,MTPL",
             "RYKL,KRTL,JGTL"
         )
