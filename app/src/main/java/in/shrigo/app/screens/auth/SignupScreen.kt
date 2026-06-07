@@ -8,6 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -21,20 +22,36 @@ fun SignupScreen(
 
     navController: NavController,
 
+    role: String,
+
     viewModel: UploadRideViewModel =
         viewModel()
 
 ) {
 
-    val context = LocalContext.current
+    val context =
+        LocalContext.current
 
     //----------------------------------
     // Signup Type
     //----------------------------------
 
-    var isPassenger by remember {
-        mutableStateOf(true)
-    }
+    val isPassenger =
+        role == "passenger"
+
+    val screenTitle =
+
+        if (isPassenger)
+            "Create Passenger Account"
+        else
+            "Create Driver Account"
+
+    val screenSubtitle =
+
+        if (isPassenger)
+            "Find rides and travel easily"
+        else
+            "Offer rides and earn while travelling"
 
     //----------------------------------
     // Common Fields
@@ -118,12 +135,30 @@ fun SignupScreen(
             navController.navigate(
                 Routes.LOGIN
             ) {
-                popUpTo(
-                    Routes.SIGNUP
-                ) {
+
+                popUpTo(0) {
                     inclusive = true
                 }
+
+                launchSingleTop =
+                    true
             }
+        }
+    }
+
+    //----------------------------------
+    // Error Toast
+    //----------------------------------
+
+    error?.let {
+
+        LaunchedEffect(it) {
+
+            Toast.makeText(
+                context,
+                it,
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -139,95 +174,42 @@ fun SignupScreen(
                 rememberScrollState()
             )
             .padding(16.dp)
+            .padding(bottom = 100.dp)
 
     ) {
 
+        //----------------------------------
+        // Header
+        //----------------------------------
+
         Text(
 
-            text = "Create Account",
+            text =
+                screenTitle,
 
             style =
                 MaterialTheme
                     .typography
-                    .headlineMedium
+                    .headlineMedium,
+
+            fontWeight =
+                FontWeight.Bold
         )
 
         Spacer(
             modifier =
-                Modifier.height(16.dp)
+                Modifier.height(8.dp)
         )
 
-        //----------------------------------
-        // Passenger / Driver Toggle
-        //----------------------------------
+        Text(
+            text =
+                screenSubtitle,
 
-//----------------------------------
-// Passenger / Driver Toggle
-//----------------------------------
-
-        Row(
-
-            horizontalArrangement =
-                Arrangement.spacedBy(12.dp)
-
-        ) {
-
-            // Passenger Button
-            if (isPassenger) {
-
-                Button(
-
-                    onClick = {
-                        isPassenger = true
-                    }
-
-                ) {
-
-                    Text("Passenger")
-                }
-
-            } else {
-
-                OutlinedButton(
-
-                    onClick = {
-                        isPassenger = true
-                    }
-
-                ) {
-
-                    Text("Passenger")
-                }
-            }
-
-            // Driver Button
-            if (!isPassenger) {
-
-                Button(
-
-                    onClick = {
-                        isPassenger = false
-                    }
-
-                ) {
-
-                    Text("Driver")
-                }
-
-            } else {
-
-                OutlinedButton(
-
-                    onClick = {
-                        isPassenger = false
-                    }
-
-                ) {
-
-                    Text("Driver")
-                }
-            }
-        }
+            style =
+                MaterialTheme
+                    .typography
+                    .bodyMedium
+        )
 
         Spacer(
             modifier =
@@ -263,7 +245,7 @@ fun SignupScreen(
         )
 
         //----------------------------------
-        // Driver Only Fields
+        // Driver Fields
         //----------------------------------
 
         if (!isPassenger) {
@@ -302,7 +284,7 @@ fun SignupScreen(
         }
 
         //----------------------------------
-        // Remaining Common Fields
+        // Common Fields
         //----------------------------------
 
         AppTextField(
@@ -320,6 +302,10 @@ fun SignupScreen(
             },
             label = "Mobile Number *"
         )
+
+        //----------------------------------
+        // Password
+        //----------------------------------
 
         OutlinedTextField(
 
@@ -347,14 +333,17 @@ fun SignupScreen(
 
         OutlinedTextField(
 
-            value = confirmPassword,
+            value =
+                confirmPassword,
 
             onValueChange = {
                 confirmPassword = it
             },
 
             label = {
-                Text("Confirm Password *")
+                Text(
+                    "Confirm Password *"
+                )
             },
 
             visualTransformation =
@@ -375,6 +364,9 @@ fun SignupScreen(
 
         Button(
 
+            enabled =
+                !isLoading,
+
             onClick = {
 
                 //----------------------------------
@@ -382,9 +374,20 @@ fun SignupScreen(
                 //----------------------------------
 
                 if (
-                    firstName.isBlank() ||
-                    contact.isBlank() ||
-                    password.isBlank()
+
+                    firstName
+                        .isBlank()
+
+                    ||
+
+                    contact
+                        .isBlank()
+
+                    ||
+
+                    password
+                        .isBlank()
+
                 ) {
 
                     Toast.makeText(
@@ -402,10 +405,15 @@ fun SignupScreen(
 
                 if (
 
-                    !isPassenger &&
+                    !isPassenger
+                    &&
                     (
-                            aadharNumber.isBlank() ||
-                                    vehicleRegNo.isBlank()
+                            aadharNumber
+                                .isBlank()
+
+                                    ||
+                                    vehicleRegNo
+                                        .isBlank()
                             )
 
                 ) {
@@ -442,29 +450,31 @@ fun SignupScreen(
                 }
 
                 //----------------------------------
-                // Passenger Signup
+                // Signup Request
                 //----------------------------------
 
-                val request = SignupRequest(
+                val request =
 
-                    passengerFirstName =
-                        firstName,
+                    SignupRequest(
 
-                    passengerLastName =
-                        lastName,
+                        passengerFirstName =
+                            firstName,
 
-                    passengerAge =
-                        age,
+                        passengerLastName =
+                            lastName,
 
-                    passengerEmail =
-                        email,
+                        passengerAge =
+                            age,
 
-                    passengerContact =
-                        contact,
+                        passengerEmail =
+                            email,
 
-                    passengerPswd =
-                        password
-                )
+                        passengerContact =
+                            contact,
+
+                        passengerPswd =
+                            password
+                    )
 
                 viewModel.signupUser(
                     request
@@ -490,6 +500,10 @@ fun SignupScreen(
                 Modifier.height(16.dp)
         )
 
+        //----------------------------------
+        // Login
+        //----------------------------------
+
         TextButton(
 
             onClick = {
@@ -506,6 +520,10 @@ fun SignupScreen(
             )
         }
 
+        //----------------------------------
+        // Error Text
+        //----------------------------------
+
         error?.let {
 
             Spacer(
@@ -513,7 +531,15 @@ fun SignupScreen(
                     Modifier.height(12.dp)
             )
 
-            Text(text = it)
+            Text(
+
+                text = it,
+
+                color =
+                    MaterialTheme
+                        .colorScheme
+                        .error
+            )
         }
     }
 }

@@ -57,7 +57,8 @@ fun LoginScreen(
 
                     userId =
                         it.userId ?: 0,
-userUniqueId = it.uniqueId,
+                    userUniqueId =
+                        it.uniqueId,
                     firstName =
                         it.firstName,
 
@@ -229,6 +230,9 @@ userUniqueId = it.uniqueId,
             // Login Button
             Button(
 
+                enabled =
+                    !isLoading,
+
                 onClick = {
 
                     if (
@@ -268,7 +272,11 @@ userUniqueId = it.uniqueId,
                     isLoading
                 ) {
 
-                    CircularProgressIndicator()
+                    CircularProgressIndicator(
+                        strokeWidth = 2.dp,
+                        modifier =
+                            Modifier.size(22.dp)
+                    )
 
                 } else {
 
@@ -306,7 +314,7 @@ userUniqueId = it.uniqueId,
                 onClick = {
 
                     navController.navigate(
-                        Routes.SIGNUP
+                        Routes.ROLE_SELECTION
                     )
                 }
 
