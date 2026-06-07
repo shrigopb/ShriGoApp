@@ -196,9 +196,7 @@ class RideRepository {
                     )
 
             Log.d(
-
                 "SIGNUP_CODE",
-
                 "Code = ${response.code()}"
             )
 
@@ -206,32 +204,52 @@ class RideRepository {
                 response.isSuccessful
             ) {
 
+                val body =
+                    response.body()
+
                 Log.d(
-
                     "SIGNUP_SUCCESS",
-
-                    "Body = ${response.body()}"
+                    "Body = $body"
                 )
 
-                response.body()
+                body
 
             } else {
 
-                val errorMessage =
+                val errorJson =
 
                     response
                         .errorBody()
                         ?.string()
-                        ?: "Unknown Error"
 
                 Log.e(
-
                     "SIGNUP_ERROR",
-
-                    errorMessage
+                    errorJson
+                        ?: "No error body"
                 )
 
-                null
+                try {
+
+                    com.google.gson.Gson()
+                        .fromJson(
+
+                            errorJson,
+
+                            SignupResponse::class.java
+                        )
+
+                } catch (
+                    e: Exception
+                ) {
+
+                    SignupResponse(
+
+                        success = false,
+
+                        message =
+                            "Signup failed"
+                    )
+                }
             }
 
         } catch (
@@ -239,16 +257,19 @@ class RideRepository {
         ) {
 
             Log.e(
-
                 "SIGNUP_EXCEPTION",
-
                 e.message
-                    ?: "Unknown Exception",
-
-                e
+                    ?: "Unknown Error"
             )
 
-            null
+            SignupResponse(
+
+                success = false,
+
+                message =
+                    e.message
+                        ?: "Network error"
+            )
         }
     }
 }
