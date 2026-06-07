@@ -319,13 +319,17 @@ fun UploadRideScreen(
             "MTPL",
             "KRTL",
             "RYKL",
+            "JGTL",
             "ARMR",
             "NZB",
             "JBS,HYD",
-            "JBS,Airport",
-            "JBS,HYD,Airport",
             "KRTL,MTPL",
-            "RYKL,KRTL,MTPL"
+            "ORR,Airport",
+            "Airport,JBS",
+            "Airport,HYD",
+            "Airport,JBS,HYD",
+            "RYKL,KRTL,MTPL",
+            "RYKL,KRTL,JGTL"
         )
 
         var expandedDesti by remember {
