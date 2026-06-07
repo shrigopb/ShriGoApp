@@ -6,6 +6,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.*
 import `in`.shrigo.app.screens.auth.LoginScreen
+import `in`.shrigo.app.screens.auth.RoleSelectionScreen
 import `in`.shrigo.app.screens.auth.SignupScreen
 import `in`.shrigo.app.screens.bookings.BookingScreen
 import `in`.shrigo.app.screens.home.HomeScreen
@@ -56,7 +57,11 @@ fun AppNavHost() {
                 &&
                 currentRoute != Routes.LOGIN
                 &&
-                currentRoute != Routes.SIGNUP
+                currentRoute != Routes.ROLE_SELECTION
+                &&
+                currentRoute?.startsWith(
+                    "signup"
+                ) != true
             ) {
 
                 NavigationBar(
@@ -258,13 +263,28 @@ fun AppNavHost() {
             //---------------------------
             //Signup
             //--------------------------
-            // Signup
             composable(
-                Routes.SIGNUP
+                Routes.ROLE_SELECTION
             ) {
 
-                SignupScreen(
+                RoleSelectionScreen(
                     navController
+                )
+            }
+
+            composable(
+                route = "signup/{role}"
+            ) { backStackEntry ->
+
+                val role =
+                    backStackEntry.arguments
+                        ?.getString("role")
+                        ?: "passenger"
+
+                SignupScreen(
+                    navController =
+                        navController,
+                    role = role
                 )
             }
             //---------------------------
