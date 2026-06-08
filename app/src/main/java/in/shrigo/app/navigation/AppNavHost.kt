@@ -5,6 +5,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.*
+import `in`.shrigo.app.screens.auth.ForgotPasswordScreen
 import `in`.shrigo.app.screens.auth.LoginScreen
 import `in`.shrigo.app.screens.auth.RoleSelectionScreen
 import `in`.shrigo.app.screens.auth.SignupScreen
@@ -58,6 +59,8 @@ fun AppNavHost() {
                 currentRoute != Routes.LOGIN
                 &&
                 currentRoute != Routes.ROLE_SELECTION
+                &&
+                currentRoute != Routes.FORGOT_PASSWORD
                 &&
                 currentRoute?.startsWith(
                     "signup"
@@ -333,8 +336,9 @@ fun AppNavHost() {
                     }
                 }
             }
-
+            //--------------------------------
             // Profile
+            //--------------------------------
             composable(
                 Routes.PROFILE
             ) {
@@ -360,6 +364,17 @@ fun AppNavHost() {
                             )
                     }
                 }
+            }
+            //-----------------------------------
+            //FORGOT_PASSWORD
+            //----------------------------------
+            composable(
+                Routes.FORGOT_PASSWORD
+            ) {
+
+                ForgotPasswordScreen(
+                    navController
+                )
             }
         }
     }

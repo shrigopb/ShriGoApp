@@ -2,6 +2,7 @@ package `in`.shrigo.app.screens.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import `in`.shrigo.app.models.ForgotPasswordRequest
 import `in`.shrigo.app.models.LoginResponse
 import `in`.shrigo.app.repository.RideRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -33,6 +34,22 @@ class LoginViewModel : ViewModel() {
     val error:
             StateFlow<String?> =
         _error
+    private val _forgotPasswordSuccess =
+        MutableStateFlow(false)
+
+    val forgotPasswordSuccess:
+            StateFlow<Boolean>
+            = _forgotPasswordSuccess
+
+    private val _forgotPasswordMessage =
+        MutableStateFlow<String?>(null)
+
+    val forgotPasswordMessage:
+            StateFlow<String?>
+            = _forgotPasswordMessage
+    //--------------------------------------
+    //loginUser
+    //--------------------------------------
 
     fun loginUser(
         emailOrPhone: String,
@@ -76,4 +93,85 @@ class LoginViewModel : ViewModel() {
             _isLoading.value = false
         }
     }
+
+//--------------------------------------
+// forgotPassword
+//--------------------------------------
+fun forgotPassword(
+
+    email: String
+
+) {
+
+    viewModelScope.launch {
+
+        try {
+
+            _isLoading.value =
+                true
+
+            android.util.Log.d(
+                "FORGOT_PASSWORD",
+                "Email = $email"
+            )
+
+            val response =
+
+                repository
+                    .forgotPassword(
+
+                        ForgotPasswordRequest(
+                            email
+                        )
+                    )
+
+            android.util.Log.d(
+                "FORGOT_PASSWORD",
+                "Response = $response"
+            )
+
+            if (
+                response?.success
+                == true
+            ) {
+
+                _forgotPasswordSuccess
+                    .value = true
+
+                _forgotPasswordMessage
+                    .value =
+                    response.message
+
+            } else {
+
+                android.util.Log.e(
+                    "FORGOT_PASSWORD",
+                    "FAILED = ${response?.message}"
+                )
+
+                _forgotPasswordMessage
+                    .value =
+
+                    response?.message
+                        ?: "Failed to send reset link"
+            }
+
+        } catch (
+            e: Exception
+        ) {
+
+            android.util.Log.e(
+                "FORGOT_PASSWORD",
+                e.message ?: "Unknown Error"
+            )
+
+            _forgotPasswordMessage
+                .value =
+                e.message
+        }
+
+        _isLoading.value =
+            false
+    }
+}
 }

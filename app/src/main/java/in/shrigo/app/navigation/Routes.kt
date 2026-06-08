@@ -23,4 +23,7 @@ object Routes {
 
     const val EDIT_RIDE =
         "edit_ride"
+
+    const val FORGOT_PASSWORD =
+        "forgot_password"
 }

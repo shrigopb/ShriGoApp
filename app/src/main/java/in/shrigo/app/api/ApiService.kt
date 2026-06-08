@@ -1,5 +1,7 @@
 package `in`.shrigo.app.api
 
+import `in`.shrigo.app.models.ForgotPasswordRequest
+import `in`.shrigo.app.models.ForgotPasswordResponse
 import `in`.shrigo.app.models.Ride
 import retrofit2.http.GET
 import retrofit2.Response
@@ -123,4 +125,13 @@ interface ApiService {
 
     ): Response<SignupResponse>
 
+
+    //-----------------------------------
+    //ForgotPassword Api
+    //-----------------------------------
+
+    @POST("api/ForgotPasswordApi")
+    suspend fun forgotPassword(
+        @Body request: ForgotPasswordRequest
+    ): Response<ForgotPasswordResponse>
 }

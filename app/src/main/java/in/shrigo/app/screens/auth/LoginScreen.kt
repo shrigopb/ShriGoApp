@@ -285,6 +285,24 @@ fun LoginScreen(
                     )
                 }
             }
+            //-----------------------
+            //Forgot Password
+            //------------------------
+            TextButton(
+
+                onClick = {
+
+                    navController.navigate(
+                        Routes.FORGOT_PASSWORD
+                    )
+                }
+
+            ) {
+
+                Text(
+                    "Forgot Password?"
+                )
+            }
 
             // Error message
             error?.let {

@@ -2,6 +2,8 @@ package `in`.shrigo.app.repository
 
 import android.util.Log
 import `in`.shrigo.app.api.RetrofitClient
+import `in`.shrigo.app.models.ForgotPasswordRequest
+import `in`.shrigo.app.models.ForgotPasswordResponse
 import `in`.shrigo.app.models.LoginRequest
 import `in`.shrigo.app.models.LoginResponse
 import `in`.shrigo.app.models.Ride
@@ -270,6 +272,61 @@ class RideRepository {
                     e.message
                         ?: "Network error"
             )
+        }
+    }
+    //--------------------------------
+// forgotPassword
+//--------------------------------
+    suspend fun forgotPassword(
+
+        request:
+        ForgotPasswordRequest
+
+    ): ForgotPasswordResponse? {
+
+        return try {
+
+            android.util.Log.d(
+                "FORGOT_API",
+                "Request = $request"
+            )
+
+            val response =
+
+                RetrofitClient
+                    .api
+                    .forgotPassword(
+                        request
+                    )
+
+            android.util.Log.d(
+                "FORGOT_API",
+                "Code = ${response.code()}"
+            )
+
+            android.util.Log.d(
+                "FORGOT_API",
+                "Body = ${response.body()}"
+            )
+
+            android.util.Log.e(
+                "FORGOT_API",
+                "ErrorBody = ${
+                    response.errorBody()
+                        ?.string()
+                }"
+            )
+
+            response.body()
+
+        } catch (e: Exception) {
+
+            android.util.Log.e(
+                "FORGOT_API",
+                e.stackTraceToString()
+            )
+
+            null
         }
     }
 }
