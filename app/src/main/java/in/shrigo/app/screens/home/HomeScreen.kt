@@ -33,6 +33,7 @@ import java.time.LocalTime
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import androidx.compose.material.icons.filled.Share
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -363,20 +364,6 @@ fun RideCard(
                     .padding(18.dp)
 
         ) {
-
-            // SOURCE
-            Text(
-                text = ride.rideSource ?: "Unknown",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold
-            )
-
-            Spacer(
-                modifier =
-                    Modifier.height(
-                        4.dp
-                    )
-            )
             val formattedTime = try {
 
                 if (ride.rideTime == null) {
@@ -431,6 +418,7 @@ fun RideCard(
             } catch (e: Exception) {
                 "-"
             }
+
             // DATE + TIME
             val displayDate = try {
 
@@ -462,6 +450,205 @@ fun RideCard(
 
                 ride.rideDate ?: "-"
             }
+//----------------------------------
+// SOURCE + SHARE
+//----------------------------------
+
+            Row(
+
+                modifier =
+                    Modifier.fillMaxWidth(),
+
+                horizontalArrangement =
+                    Arrangement.SpaceBetween,
+
+                verticalAlignment =
+                    Alignment.CenterVertically
+            ) {
+
+                Row(
+
+                    verticalAlignment =
+                        Alignment.CenterVertically
+                ) {
+
+                    if (
+                        ride.rideSource
+                            ?.contains(
+                                "Airport",
+                                ignoreCase = true
+                            ) == true
+                    ) {
+
+                        Icon(
+                            imageVector =
+                                if (
+                                    ride.rideSource
+                                        ?.contains(
+                                            "Airport",
+                                            ignoreCase = true
+                                        ) == true
+                                ) {
+                                    Icons.Default.AirplanemodeActive
+                                } else {
+                                    Icons.Default.LocationOn
+                                },
+
+                            contentDescription = null,
+
+                            tint =
+                                if (
+                                    ride.rideSource
+                                        ?.contains(
+                                            "Airport",
+                                            ignoreCase = true
+                                        ) == true
+                                ) {
+                                    Color(0xFF0288D1)
+                                } else {
+                                    Color.Gray
+                                }
+                        )
+
+                    } else {
+
+                        Icon(
+
+                            imageVector =
+                                Icons.Default
+                                    .LocationOn,
+
+                            contentDescription =
+                                null,
+
+                            tint =
+                                Color.Gray
+                        )
+                    }
+
+                    Spacer(
+                        modifier =
+                            Modifier.width(
+                                6.dp
+                            )
+                    )
+
+                    Text(
+
+                        text =
+                            ride.rideSource
+                                ?: "Unknown",
+
+                        style =
+                            MaterialTheme
+                                .typography
+                                .titleLarge,
+
+                        fontWeight =
+                            FontWeight.Bold
+                    )
+                }
+
+                IconButton(
+
+                    onClick = {
+
+                        val shareMessage = """
+
+🚗 Ride Available on ShriGo
+
+📍 From:
+${ride.rideSource ?: "-"}
+
+📍 To:
+${ride.rideDesti ?: "-"}
+
+🛣 Via:
+${ride.rideVia ?: "-"}
+
+📅 Date:
+$displayDate
+
+⏰ Time:
+$formattedTime
+
+💺 Seats:
+${ride.rideSeats ?: 0}
+
+💰 Price:
+₹${ride.ridePrice ?: 0} / seat
+
+Book your ride on ShriGo:
+https://shrigo-cmc6eaccfzfzfxdf.canadacentral-01.azurewebsites.net
+
+            """.trimIndent()
+
+                        val shareIntent =
+
+                            Intent(
+                                Intent.ACTION_SEND
+                            ).apply {
+
+                                type =
+                                    "text/plain"
+
+                                putExtra(
+
+                                    Intent.EXTRA_TEXT,
+
+                                    shareMessage
+                                )
+                            }
+
+                        context.startActivity(
+
+                            Intent.createChooser(
+
+                                shareIntent,
+
+                                "Share Ride"
+                            )
+                        )
+                    },
+
+                    modifier =
+                        Modifier
+                            .size(42.dp)
+                            .background(
+
+                                Color(
+                                    0xFFFFC107
+                                ),
+
+                                RoundedCornerShape(
+                                    10.dp
+                                )
+                            )
+                ) {
+                    //Share Icon
+                    Icon(
+
+                        imageVector =
+                            Icons.Default.Share,
+
+                        contentDescription =
+                            "Share Ride",
+
+                        tint =
+                            Color.Black
+                    )
+                }
+            }
+            //-------------------
+
+            Spacer(
+                modifier =
+                    Modifier.height(
+                        4.dp
+                    )
+            )
+
+
             Text(
                 text = "$displayDate • $formattedTime",
                 style = MaterialTheme.typography.bodySmall,
@@ -484,8 +671,9 @@ fun RideCard(
                         14.dp
                     )
             )
-
+            //-----------------------------
             // VIA + PRICE
+            //-----------------------------
             Row(
 
                 modifier =
@@ -556,8 +744,9 @@ fun RideCard(
                         14.dp
                     )
             )
-
+            //-------------------------------
             // DESTINATION + SEATS
+            //-------------------------------
             Row(
 
                 modifier =
@@ -575,18 +764,50 @@ fun RideCard(
                         Alignment.CenterVertically
                 ) {
 
+                    val isAirport =
+
+                        (ride.rideSource
+                            ?.contains(
+                                "Airport",
+                                ignoreCase = true
+                            ) == true)
+
+                                ||
+
+                                (ride.rideDesti
+                                    ?.contains(
+                                        "Airport",
+                                        ignoreCase = true
+                                    ) == true)
+
                     Icon(
                         imageVector =
-                            Icons.Default
-                                .AirplanemodeActive,
+                            if (
+                                ride.rideDesti
+                                    ?.contains(
+                                        "Airport",
+                                        ignoreCase = true
+                                    ) == true
+                            ) {
+                                Icons.Default.AirplanemodeActive
+                            } else {
+                                Icons.Default.LocationOn
+                            },
 
-                        contentDescription =
-                            null,
+                        contentDescription = null,
 
                         tint =
-                            Color(
-                                0xFF0288D1
-                            )
+                            if (
+                                ride.rideDesti
+                                    ?.contains(
+                                        "Airport",
+                                        ignoreCase = true
+                                    ) == true
+                            ) {
+                                Color(0xFF0288D1)
+                            } else {
+                                Color.Gray
+                            }
                     )
 
                     Spacer(
@@ -597,7 +818,9 @@ fun RideCard(
                     )
 
                     Text(
-                        text = ride.rideDesti ?: "Unknown"
+                        text =
+                            ride.rideDesti
+                                ?: "Unknown"
                     )
                 }
 
@@ -608,8 +831,7 @@ fun RideCard(
 
                     Icon(
                         imageVector =
-                            Icons.Default
-                                .People,
+                            Icons.Default.People,
 
                         contentDescription =
                             null,
@@ -626,10 +848,12 @@ fun RideCard(
                     )
 
                     Text(
-                        text = "${ride.rideSeats ?: 0} Seats"
+                        text =
+                            "${ride.rideSeats ?: 0} Seats"
                     )
                 }
             }
+            //----------------------------------------------
 
             Spacer(
                 modifier =
@@ -637,8 +861,9 @@ fun RideCard(
                         18.dp
                     )
             )
-
+            //-----------------------------------
             // BOOK BUTTON
+            //----------------------------------
             Button(
 
                 onClick = {
