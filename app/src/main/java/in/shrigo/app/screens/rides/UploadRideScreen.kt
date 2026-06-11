@@ -690,7 +690,7 @@ fun UploadRideScreen(
             mutableStateOf(false)
         }
 
-        val seatOptions = listOf( "1", "2", "3", "4", "5", "6" )
+        val seatOptions = listOf( "1", "2", "3", "4", "5", "6" ,"7")
          ExposedDropdownMenuBox(
 
             expanded =

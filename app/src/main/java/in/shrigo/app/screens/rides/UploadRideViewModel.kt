@@ -188,10 +188,13 @@ class UploadRideViewModel : ViewModel() {
                     null
 
                 Log.d(
-                    "SIGNUP_REQUEST",
+                    "SIGNUP_REQUEST_User",
+                    "Signup request started for ${request.userContact}"
+                )
+                Log.d(
+                    "SIGNUP_REQUEST_Passenger",
                     "Signup request started for ${request.passengerContact}"
                 )
-
                 val response =
 
                     repository
