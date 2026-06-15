@@ -855,7 +855,7 @@ fun UploadRideScreen(
                             else
 
                                 sessionManager
-                                    .getUserId()
+                                    .getUserUniqueId()
                                     .toString(),
 
                         driverFirstName =
