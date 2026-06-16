@@ -261,7 +261,7 @@ fun UploadRideScreen(
                     true,
 
                 label = {
-                    Text("Ride Source")
+                    Text("Ride From")
                 },
 
                 modifier =
@@ -364,7 +364,7 @@ fun UploadRideScreen(
                     true,
 
                 label = {
-                    Text("Ride Desti")
+                    Text("Ride To")
                 },
 
                 modifier =
@@ -770,7 +770,7 @@ fun UploadRideScreen(
                 ridePrice = it
             },
             label = {
-                Text("Price")
+                Text("Price/P")
             },
             modifier =
                 Modifier.fillMaxWidth()

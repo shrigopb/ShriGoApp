@@ -1,5 +1,6 @@
 package `in`.shrigo.app.screens.home
 
+import android.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -26,6 +27,7 @@ import androidx.compose.material.icons.filled.AirplanemodeActive
 import androidx.compose.material.icons.filled.People
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.ui.platform.LocalContext
 import java.time.format.DateTimeFormatter
@@ -34,6 +36,12 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import androidx.compose.material.icons.filled.Share
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import `in`.shrigo.app.models.BookRideRequest
+import `in`.shrigo.app.repository.BookingRepository
+import `in`.shrigo.app.utils.SessionManager
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -335,6 +343,22 @@ fun RideCard(
     val context =
         LocalContext.current
 
+    val sessionManager =
+        SessionManager(
+            context
+        )
+
+    val role =
+        sessionManager
+            .getRole()
+    val coroutineScope =
+        rememberCoroutineScope()
+
+    val bookingRepository =
+        remember {
+            BookingRepository()
+        }
+
     Card(
 
         modifier = Modifier
@@ -422,33 +446,72 @@ fun RideCard(
             // DATE + TIME
             val displayDate = try {
 
-                val rideDate =
+                val inputFormat =
 
-                    java.time.LocalDate.parse(
+                    SimpleDateFormat(
+                        "yyyy-MM-dd",
+                        Locale.getDefault()
+                    )
+
+                val rideDateObj =
+
+                    inputFormat.parse(
                         ride.rideDate
                     )
 
+                val todayCalendar =
+
+                    Calendar.getInstance()
+
                 val today =
 
-                    java.time.LocalDate.now()
+                    inputFormat.format(
+                        todayCalendar.time
+                    )
 
-                when (rideDate) {
+                val tomorrowCalendar =
+
+                    Calendar.getInstance()
+
+                tomorrowCalendar.add(
+                    Calendar.DAY_OF_YEAR,
+                    1
+                )
+
+                val tomorrow =
+
+                    inputFormat.format(
+                        tomorrowCalendar.time
+                    )
+
+                val currentRideDate =
+
+                    inputFormat.format(
+                        rideDateObj!!
+                    )
+
+                when (
+                    currentRideDate
+                ) {
 
                     today ->
                         "Today"
 
-                    today.plusDays(1) ->
+                    tomorrow ->
                         "Tomorrow"
 
                     else ->
-                        ride.rideDate ?: "-"
+                        ride.rideDate
+                            ?: "-"
+
                 }
 
             } catch (
                 e: Exception
             ) {
 
-                ride.rideDate ?: "-"
+                ride.rideDate
+                    ?: "-"
             }
 //----------------------------------
 // SOURCE + SHARE
@@ -649,11 +712,34 @@ https://shrigo-cmc6eaccfzfzfxdf.canadacentral-01.azurewebsites.net
             )
 
 
+
             Text(
-                text = "$displayDate • $formattedTime",
-                style = MaterialTheme.typography.bodySmall,
-                color = Color(0xFF2E7D32),
-                fontWeight = FontWeight.SemiBold
+                text =
+                    "$displayDate • $formattedTime",
+
+                style =
+                    MaterialTheme
+                        .typography
+                        .bodySmall,
+
+                color = when (
+                    displayDate
+                ) {
+
+                    "Today" ->
+                        Color(
+                            0xFF2E7D32
+                        )
+
+                    "Tomorrow" ->
+                        Color.Blue
+
+                    else ->
+                        Color.Gray
+                },
+
+                fontWeight =
+                    FontWeight.SemiBold
             )
 
             Spacer(
@@ -864,35 +950,100 @@ https://shrigo-cmc6eaccfzfzfxdf.canadacentral-01.azurewebsites.net
             //-----------------------------------
             // BOOK BUTTON
             //----------------------------------
-            Button(
+            if (
 
-                onClick = {
+                role.equals(
 
-                },
+                    "Passenger",
 
-                modifier =
-                    Modifier
-                        .fillMaxWidth(),
-
-                colors =
-                    ButtonDefaults
-                        .buttonColors(
-
-                            containerColor =
-                                Color(
-                                    0xFF2196F3
-                                )
-                        ),
-
-                shape =
-                    RoundedCornerShape(
-                        12.dp
-                    )
+                    ignoreCase =
+                        true
+                )
             ) {
 
-                Text(
-                    "Book Ride"
-                )
+                Button(
+
+                    onClick = {
+
+                        coroutineScope.launch {
+
+                            val request =
+
+                                BookRideRequest(
+
+                                    rideId =
+                                        ride.rideId,
+
+                                    bookedSeats =
+                                        1,
+
+                                    passengerFirstName =
+
+                                        sessionManager
+                                            .getFirstName(),
+
+                                    passengerUniqueId =
+
+                                        sessionManager
+                                            .getUserUniqueId(),
+
+                                    passengerContact =
+
+                                        sessionManager
+                                            .getPhone(),
+
+                                    passengerEmail =
+
+                                        sessionManager
+                                            .getEmail()
+                                )
+
+                            val success =
+
+                                bookingRepository
+                                    .bookRide(
+                                        request
+                                    )
+
+                            Toast.makeText(
+
+                                context,
+
+                                if (success)
+                                    "Ride booked successfully"
+                                else
+                                    "Booking failed",
+
+                                Toast.LENGTH_SHORT
+
+                            ).show()
+                        }
+                    },
+
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(),
+
+                    colors =
+                        ButtonDefaults
+                            .buttonColors(
+
+                                containerColor =
+                                    Color(
+                                        0xFF2196F3
+                                    )
+                            ),
+
+                    shape =
+                        RoundedCornerShape(
+                            12.dp
+                        )
+                ) {
+
+                    Text(
+                        "Book Ride"
+                    )
+                }
             }
 
             Spacer(
