@@ -1,5 +1,7 @@
 package `in`.shrigo.app.api
 
+import `in`.shrigo.app.models.BookRideRequest
+import `in`.shrigo.app.models.BookingResponse
 import `in`.shrigo.app.models.ForgotPasswordRequest
 import `in`.shrigo.app.models.ForgotPasswordResponse
 import `in`.shrigo.app.models.Ride
@@ -134,4 +136,33 @@ interface ApiService {
     suspend fun forgotPassword(
         @Body request: ForgotPasswordRequest
     ): Response<ForgotPasswordResponse>
+
+    //--------------------
+    //Book Ride
+    //----------------------
+    @POST(
+        "api/BookingApi/bookride"
+    )
+    suspend fun bookRide(
+        @Body
+        request:
+        BookRideRequest
+    ): Response<BookingResponse>
+
+    //---------------------------------
+// Get My Bookings
+//---------------------------------
+    @GET(
+        "api/BookingApi/mybookings/{uniqueId}"
+    )
+    suspend fun getMyBookings(
+
+        @Path(
+            "uniqueId"
+        )
+        uniqueId: String
+
+    ): Response<
+            List<BookingResponse>
+            >
 }

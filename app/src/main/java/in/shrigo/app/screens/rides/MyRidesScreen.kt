@@ -472,32 +472,32 @@ fun RideCard(
                     )
                 }
 
-                Button(
-
-                    onClick = {
-
-                        onDelete()
-                    },
-
-                    modifier =
-                        Modifier.weight(1f),
-
-                    colors =
-
-                        ButtonDefaults
-                            .buttonColors(
-
-                                containerColor =
-                                    MaterialTheme
-                                        .colorScheme
-                                        .error
-                            )
-                ) {
-
-                    Text(
-                        "Delete Ride"
-                    )
-                }
+//                Button(
+//
+//                    onClick = {
+//
+//                        onDelete()
+//                    },
+//
+//                    modifier =
+//                        Modifier.weight(1f),
+//
+//                    colors =
+//
+//                        ButtonDefaults
+//                            .buttonColors(
+//
+//                                containerColor =
+//                                    MaterialTheme
+//                                        .colorScheme
+//                                        .error
+//                            )
+//                ) {
+//
+//                    Text(
+//                        "Delete Ride"
+//                    )
+//                }
             }
 
             //-----------------------------------

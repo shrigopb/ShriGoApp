@@ -222,12 +222,13 @@ fun EditRideScreen(
                     rideSource,
 
                 onValueChange = {},
-
+                enabled =
+                    false,
                 readOnly =
                     true,
 
                 label = {
-                    Text("Ride Source")
+                    Text("Ride From")
                 },
 
                 modifier =
@@ -329,12 +330,13 @@ fun EditRideScreen(
                     rideDesti,
 
                 onValueChange = {},
-
+                enabled =
+                    false,
                 readOnly =
                     true,
 
                 label = {
-                    Text("Ride Desti")
+                    Text("Ride To")
                 },
 
                 modifier =
@@ -484,7 +486,8 @@ fun EditRideScreen(
 
             value =
                 rideDate,
-
+            enabled =
+                false,
             onValueChange = {},
 
             readOnly =
@@ -781,7 +784,7 @@ fun EditRideScreen(
             },
 
             label = {
-                Text("Price")
+                Text("Price/P")
             },
 
             modifier =
