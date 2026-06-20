@@ -150,12 +150,29 @@ interface ApiService {
     ): Response<BookingResponse>
 
     //---------------------------------
-// Get My Bookings
-//---------------------------------
+    // Get My Bookings
+    //---------------------------------
     @GET(
         "api/BookingApi/mybookings/{uniqueId}"
     )
     suspend fun getMyBookings(
+
+        @Path(
+            "uniqueId"
+        )
+        uniqueId: String
+
+    ): Response<
+            List<BookingResponse>
+            >
+
+    //---------------------------------
+    // Get Driver Bookings
+    //---------------------------------
+    @GET(
+        "api/BookingApi/driverbookings/{uniqueId}"
+    )
+    suspend fun getDriverBookings(
 
         @Path(
             "uniqueId"

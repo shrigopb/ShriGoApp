@@ -60,43 +60,37 @@ fun BookingScreen() {
     //--------------------------------
     // Load bookings
     //--------------------------------
-    if (
-
-        role.equals(
-
-            "Driver",
-
-            ignoreCase =
-                true
-        )
+    LaunchedEffect(
+        Unit
     ) {
 
-        Box(
+        if (
 
-            modifier =
+            role.equals(
 
-                Modifier
-                    .fillMaxSize(),
+                "Driver",
 
-            contentAlignment =
-
-                Alignment.Center
+                ignoreCase =
+                    true
+            )
         ) {
 
-            Text(
-                    text =
+            viewModel
+                .loadDriverBookings(
 
-                        "Bookings are only available for passengers",
+                    sessionManager
+                        .getUserUniqueId()
+                )
 
-                    style =
+        } else {
 
-                        MaterialTheme
-                            .typography
-                            .bodyLarge
-            )
+            viewModel
+                .loadMyBookings(
+
+                    sessionManager
+                        .getUserUniqueId()
+                )
         }
-
-        return
     }
     LaunchedEffect(
         Unit
@@ -276,19 +270,47 @@ fun BookingScreen() {
                                         "Price: ₹${booking.ridePrice}"
                                 )
 
-                                Text(
+                                if (
 
-                                    text =
+                                    role.equals(
 
-                                        "Driver: ${booking.driverFirstName}"
-                                )
+                                        "Driver",
 
-                                Text(
+                                        ignoreCase =
+                                            true
+                                    )
+                                ) {
 
-                                    text =
+                                    Text(
 
-                                        "Contact: ${booking.driverContact}"
-                                )
+                                        text =
+
+                                            "Passenger: ${booking.passengerFirstName}"
+                                    )
+
+                                    Text(
+
+                                        text =
+
+                                            "Contact: ${booking.passengerContact}"
+                                    )
+
+                                } else {
+
+                                    Text(
+
+                                        text =
+
+                                            "Driver: ${booking.driverFirstName}"
+                                    )
+
+                                    Text(
+
+                                        text =
+
+                                            "Contact: ${booking.driverContact}"
+                                    )
+                                }
                             }
                         }
                     }

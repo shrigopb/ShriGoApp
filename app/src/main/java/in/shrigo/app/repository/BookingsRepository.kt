@@ -69,4 +69,71 @@ class BookingsRepository {
             emptyList()
         }
     }
+
+    //---------------------------------------
+    //Get Driver Bookings
+    //--------------------------------------
+    suspend fun
+            getDriverBookings(
+
+        uniqueId:
+        String
+
+    ):
+            List<
+                    BookingResponse
+                    > {
+
+        return try {
+
+            val response =
+
+                RetrofitClient
+                    .api
+                    .getDriverBookings(
+                        uniqueId
+                    )
+
+            Log.d(
+                "DRIVER_BOOKINGS",
+                "Code = ${
+                    response.code()
+                }"
+            )
+
+            Log.d(
+                "DRIVER_BOOKINGS",
+                "Body = ${
+                    response.body()
+                }"
+            )
+
+            if (
+                response
+                    .isSuccessful
+            ) {
+
+                response.body()
+
+                    ?:
+                    emptyList()
+
+            } else {
+
+                emptyList()
+            }
+
+        } catch (
+            e: Exception
+        ) {
+
+            Log.e(
+                "DRIVER_BOOKINGS",
+                e.message
+                    ?: ""
+            )
+
+            emptyList()
+        }
+    }
 }
