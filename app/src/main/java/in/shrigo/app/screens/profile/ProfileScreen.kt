@@ -279,6 +279,28 @@ fun ProfileScreen(
                     "Logout"
                 )
             }
+            Spacer(
+                modifier =
+                    Modifier.height(8.dp)
+            )
+            //-------
+            //Test
+            //---------
+            Button(
+
+                onClick = {
+
+                    navController.navigate(
+                        Routes.NOTIFICATIONS
+                    )
+                }
+
+            ) {
+
+                Text(
+                    "Notifications"
+                )
+            }
         }
     }
 }

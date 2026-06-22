@@ -26,4 +26,6 @@ object Routes {
 
     const val FORGOT_PASSWORD =
         "forgot_password"
+
+    const val NOTIFICATIONS = "notifications"
 }
