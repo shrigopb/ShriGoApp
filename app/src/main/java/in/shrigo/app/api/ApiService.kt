@@ -16,6 +16,7 @@ import retrofit2.http.Path
 import `in`.shrigo.app.models.UploadRideRequest
 import `in`.shrigo.app.models.UploadRideResponse
 import `in`.shrigo.app.models.MyRideResponse
+import `in`.shrigo.app.models.NotificationResponse
 import `in`.shrigo.app.models.SignupRequest
 import `in`.shrigo.app.models.SignupResponse
 import `in`.shrigo.app.models.UpdateRideResponse
@@ -182,4 +183,17 @@ interface ApiService {
     ): Response<
             List<BookingResponse>
             >
+
+    //-------------------------------
+    //Notification
+    //-------------------------------
+    @GET(
+        "api/NotificationApi/{uniqueId}"
+    )
+    suspend fun getNotifications(
+
+        @Path("uniqueId")
+        uniqueId: String
+
+    ): List<NotificationResponse>
 }

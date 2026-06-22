@@ -17,7 +17,7 @@ import `in`.shrigo.app.screens.splash.SplashScreen
 import `in`.shrigo.app.utils.SessionManager
 import `in`.shrigo.app.screens.rides.UploadRideScreen
 import `in`.shrigo.app.screens.rides.EditRideScreen
-
+import `in`.shrigo.app.screens.notifications.NotificationScreen
 @Composable
 fun AppNavHost() {
 
@@ -362,6 +362,32 @@ fun AppNavHost() {
                             .navigate(
                                 Routes.LOGIN
                             )
+                    }
+                }
+            }
+
+            //--------------------------------
+            // NOTIFICATIONS
+            //--------------------------------
+            composable(
+                Routes.NOTIFICATIONS
+            ) {
+
+                if (
+                    sessionManager.isLoggedIn()
+                ) {
+
+                    NotificationScreen(
+                        sessionManager
+                    )
+
+                } else {
+
+                    LaunchedEffect(Unit) {
+
+                        navController.navigate(
+                            Routes.LOGIN
+                        )
                     }
                 }
             }
