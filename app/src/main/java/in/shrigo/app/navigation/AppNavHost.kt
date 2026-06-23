@@ -222,7 +222,8 @@ fun AppNavHost() {
 
                 HomeScreen(
                     firstName =
-                        firstName
+                        firstName,
+                    navController = navController
                 )
             }
 

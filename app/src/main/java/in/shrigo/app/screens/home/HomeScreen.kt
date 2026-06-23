@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Person
@@ -27,6 +26,7 @@ import androidx.compose.material.icons.filled.AirplanemodeActive
 import androidx.compose.material.icons.filled.People
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.ui.platform.LocalContext
@@ -42,12 +42,19 @@ import `in`.shrigo.app.models.BookRideRequest
 import `in`.shrigo.app.repository.BookingRepository
 import `in`.shrigo.app.utils.SessionManager
 import kotlinx.coroutines.launch
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.navigation.NavHostController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     firstName: String,
-
+    navController: NavHostController,
     viewModel: HomeViewModel = viewModel()
 ) {
 
@@ -58,8 +65,11 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             TopAppBar(
+
                 title = {
+
                     Column {
+
                         Text(
                             text = "ShriGo",
                             style = MaterialTheme.typography.headlineSmall,
@@ -71,6 +81,7 @@ fun HomeScreen(
                             text = "Premium Car Service",
                             style = MaterialTheme.typography.bodySmall
                         )
+
                         Spacer(
                             modifier =
                                 Modifier.height(4.dp)
@@ -92,8 +103,48 @@ fun HomeScreen(
                                 Color.DarkGray
                         )
                     }
-                }
+                },
 
+                actions = {
+
+                    BadgedBox(
+
+                        badge = {
+
+                            Badge {
+
+                                Text("1")
+                            }
+                        }
+
+                    ) {
+
+                        IconButton(
+
+                            onClick = {
+
+                                Log.d(
+                                    "NOTIFICATION",
+                                    "Bell clicked"
+                                )
+
+                                navController.navigate(
+                                    "notifications"
+                                )
+                            }
+                        ) {
+
+                            Icon(
+
+                                imageVector =
+                                    Icons.Default.Notifications,
+
+                                contentDescription =
+                                    "Notifications"
+                            )
+                        }
+                    }
+                }
             )
         }
     ) { paddingValues ->
