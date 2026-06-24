@@ -1,17 +1,19 @@
 package `in`.shrigo.app.screens.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import `in`.shrigo.app.models.Ride
+import `in`.shrigo.app.repository.NotificationRepository
 import `in`.shrigo.app.repository.RideRepository
 
 class HomeViewModel : ViewModel() {
 
     private val repository = RideRepository()
-
+    private val notificationrepository = NotificationRepository()
     private val _rides =
         MutableStateFlow<List<Ride>>(emptyList())
     val rides: StateFlow<List<Ride>>
@@ -52,6 +54,41 @@ class HomeViewModel : ViewModel() {
             } finally {
 
                 _isLoading.value = false
+            }
+        }
+    }
+
+    private val _notificationCount =
+        MutableStateFlow(0)
+
+    val notificationCount:
+            StateFlow<Int> =
+        _notificationCount
+
+    fun loadNotificationCount(
+        uniqueId: String
+    ) {
+
+        viewModelScope.launch {
+
+            try {
+
+                val count =
+                    notificationrepository
+                        .getNotificationCount(
+                            uniqueId
+                        )
+
+                _notificationCount.value =
+                    count
+
+            } catch (e: Exception) {
+
+                Log.e(
+                    "NOTIFICATION",
+                    "Count Error",
+                    e
+                )
             }
         }
     }

@@ -48,6 +48,7 @@ import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,7 +62,20 @@ fun HomeScreen(
     val rides by viewModel.rides.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val errorMessage by viewModel.error.collectAsState()
+    val notificationCount by viewModel.notificationCount.collectAsState()
+    val context = LocalContext.current
 
+    val sessionManager = remember {
+        SessionManager(context)
+    }
+
+    val uniqueId = sessionManager.getUserUniqueId()
+    LaunchedEffect(Unit) {
+
+        viewModel.loadNotificationCount(
+            uniqueId
+        )
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -111,9 +125,15 @@ fun HomeScreen(
 
                         badge = {
 
-                            Badge {
+                            if (notificationCount > 0) {
 
-                                Text("1")
+                                Badge {
+
+                                    Text(
+                                        notificationCount
+                                            .toString()
+                                    )
+                                }
                             }
                         }
 
@@ -1036,6 +1056,7 @@ https://shrigo-cmc6eaccfzfzfxdf.canadacentral-01.azurewebsites.net
                                     passengerUniqueId =
 
                                         sessionManager
+
                                             .getUserUniqueId(),
 
                                     passengerContact =
