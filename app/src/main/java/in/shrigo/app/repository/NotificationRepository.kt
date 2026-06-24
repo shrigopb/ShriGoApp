@@ -22,4 +22,33 @@ class NotificationRepository {
 
         }
     }
+    //------------------------------
+    // Notification Count
+    //------------------------------
+    suspend fun getNotificationCount(
+        uniqueId: String
+    ): Int {
+
+        return try {
+
+            val response =
+                RetrofitClient.api
+                    .getNotificationCount(
+                        uniqueId
+                    )
+
+            if (
+                response.isSuccessful
+            ) {
+                response.body()?.count ?: 0
+            }
+            else {
+                0
+            }
+
+        } catch (e: Exception) {
+
+            0
+        }
+    }
 }

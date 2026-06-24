@@ -68,20 +68,30 @@ class LoginViewModel : ViewModel() {
                         emailOrPhone,
                         password
                     )
-
+                android.util.Log.d(
+                    "LOGIN_DEBUG",
+                    "Response = $response"
+                )
                 if (
-                    response != null
-                    &&
+                    response != null &&
                     response.success
                 ) {
 
-                    _loginState.value =
-                        response
+                    android.util.Log.d(
+                        "LOGIN_DEBUG",
+                        "SUCCESS = $response"
+                    )
+
+                    _loginState.value = response
 
                 } else {
 
-                    _error.value =
-                        "Invalid Login"
+                    android.util.Log.e(
+                        "LOGIN_DEBUG",
+                        "FAILED = $response"
+                    )
+
+                    _error.value = "Invalid Login"
                 }
 
             } catch (e: Exception) {
