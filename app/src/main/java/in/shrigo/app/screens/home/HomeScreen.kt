@@ -1,6 +1,5 @@
 package `in`.shrigo.app.screens.home
 
-import android.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -50,6 +49,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.material.icons.filled.SwapHoriz
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,7 +73,24 @@ fun HomeScreen(
         SessionManager(context)
     }
 
+
+
     val uniqueId = sessionManager.getUserUniqueId()
+    var fromText by remember {
+        mutableStateOf("")
+    }
+
+    var toText by remember {
+        mutableStateOf("")
+    }
+
+    var filteredRides by remember {
+        mutableStateOf<List<Ride>>(emptyList())
+    }
+
+    var hasSearched by remember {
+        mutableStateOf(false)
+    }
     LaunchedEffect(Unit) {
 
         viewModel.loadNotificationCount(
@@ -230,7 +251,62 @@ fun HomeScreen(
 
                         item {
 
-                            SearchRideCard()
+                            SearchRideCard(
+
+                                fromText = fromText,
+
+                                toText = toText,
+
+                                onFromChange = {
+                                    fromText = it
+                                },
+
+                                onToChange = {
+                                    toText = it
+                                },
+                                onSearch = {
+
+                                    hasSearched = true
+
+                                    filteredRides = rides.filter { ride ->
+
+                                        val fromMatch =
+                                            fromText.isBlank() ||
+                                                    ride.rideSource?.contains(
+                                                        fromText,
+                                                        ignoreCase = true
+                                                    ) == true
+
+                                        val toMatch =
+                                            toText.isBlank() ||
+                                                    ride.rideDesti?.contains(
+                                                        toText,
+                                                        ignoreCase = true
+                                                    ) == true
+
+                                        fromMatch && toMatch
+                                    }
+
+                                    Log.d("SEARCH", "Filtered = ${filteredRides.size}")
+                                },
+
+                                onSwap = {
+
+                                    val temp = fromText
+                                    fromText = toText
+                                    toText = temp
+                                },
+
+                                onClear = {
+
+                                    fromText = ""
+                                    toText = ""
+
+                                    hasSearched = false
+                                    filteredRides = emptyList()
+                                }
+
+                            )
 
                             Text(
 
@@ -257,13 +333,35 @@ fun HomeScreen(
                             )
                         }
 
-                        items(
-                            rides
-                        ) { ride ->
+                        val ridesToShow =
+                            if (hasSearched)
+                                filteredRides
+                            else
+                                rides
 
-                            RideCard(
-                                ride
-                            )
+                        items(ridesToShow) { ride ->
+
+                            RideCard(ride)
+                        }
+
+                        if (hasSearched && ridesToShow.isEmpty()) {
+
+                            item {
+
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(24.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+
+                                    Text(
+                                        text = "No rides found",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        color = Color.Gray
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -273,7 +371,23 @@ fun HomeScreen(
 
 
 @Composable
-fun SearchRideCard() {
+fun SearchRideCard(
+
+    fromText: String,
+
+    toText: String,
+
+    onFromChange: (String) -> Unit,
+
+    onToChange: (String) -> Unit,
+
+    onSearch: () -> Unit,
+
+    onSwap: () -> Unit,
+
+    onClear: () -> Unit
+
+) {
 
     Card(
         modifier = Modifier
@@ -323,8 +437,9 @@ fun SearchRideCard() {
             ) {
 
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = fromText,
+
+                    onValueChange = onFromChange,
 
                     label = {
                         Text("From")
@@ -342,10 +457,18 @@ fun SearchRideCard() {
 
                     singleLine = true
                 )
-
+                IconButton(
+                    onClick = onSwap
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.SwapHoriz,
+                        contentDescription = "SwapVert"
+                    )
+                }
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = {},
+                    value = toText,
+
+                    onValueChange = onToChange,
 
                     label = {
                         Text("To")
@@ -371,7 +494,7 @@ fun SearchRideCard() {
             )
 
             Button(
-                onClick = {},
+                onClick = onSearch,
 
                 modifier =
                     Modifier.fillMaxWidth(),
@@ -401,6 +524,14 @@ fun SearchRideCard() {
                 )
 
                 Text("Search Ride")
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+
+            OutlinedButton(
+                onClick = onClear,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Clear Search")
             }
         }
     }
