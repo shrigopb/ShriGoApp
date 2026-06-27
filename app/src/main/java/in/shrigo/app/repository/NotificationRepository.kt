@@ -51,4 +51,27 @@ class NotificationRepository {
             0
         }
     }
+
+    //----------------------------------
+    // Mark All Notifications As Read
+    //----------------------------------
+    suspend fun markAllAsRead(
+        uniqueId: String
+    ): Boolean {
+
+        return try {
+
+            val response =
+                RetrofitClient.api
+                    .markAllAsRead(
+                        uniqueId
+                    )
+
+            response.isSuccessful
+
+        } catch (e: Exception) {
+
+            false
+        }
+    }
 }

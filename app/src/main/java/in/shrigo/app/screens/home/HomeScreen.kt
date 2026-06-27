@@ -91,11 +91,10 @@ fun HomeScreen(
     var hasSearched by remember {
         mutableStateOf(false)
     }
-    LaunchedEffect(Unit) {
 
-        viewModel.loadNotificationCount(
-            uniqueId
-        )
+
+    LaunchedEffect(Unit) {
+         viewModel.loadNotificationCount(uniqueId)
     }
     Scaffold(
         topBar = {

@@ -44,4 +44,22 @@ class NotificationViewModel : ViewModel() {
             }
         }
     }
+    fun markAllAsRead(
+        uniqueId: String
+    ) {
+
+        viewModelScope.launch {
+
+            try {
+
+                repository.markAllAsRead(
+                    uniqueId
+                )
+
+            } catch (e: Exception) {
+
+                e.printStackTrace()
+            }
+        }
+    }
 }

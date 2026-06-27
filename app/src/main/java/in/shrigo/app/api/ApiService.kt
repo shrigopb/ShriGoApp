@@ -210,4 +210,17 @@ interface ApiService {
         uniqueId: String
 
     ):  Response<NotificationCountResponse>
+
+    //--------------------------------
+    // Mark All As Read
+    //--------------------------------
+    @POST(
+        "api/NotificationApi/markallread/{uniqueId}"
+    )
+    suspend fun markAllAsRead(
+
+        @Path("uniqueId")
+        uniqueId: String
+
+    ): Response<Unit>
 }

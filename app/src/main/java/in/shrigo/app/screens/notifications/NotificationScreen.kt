@@ -30,10 +30,11 @@ fun NotificationScreen(
         sessionManager.getUserUniqueId()
 
     LaunchedEffect(Unit) {
-
+        viewModel.markAllAsRead(uniqueId)
         viewModel.loadNotifications(
             uniqueId
         )
+
     }
 
     LazyColumn {
