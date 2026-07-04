@@ -27,6 +27,7 @@ import `in`.shrigo.app.R
 import `in`.shrigo.app.navigation.Routes
 import `in`.shrigo.app.utils.SessionManager
 import kotlinx.coroutines.delay
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun SplashScreen(
@@ -35,6 +36,17 @@ fun SplashScreen(
 
     val context =
         LocalContext.current
+
+    val splashViewModel: SplashViewModel = viewModel()
+
+    val showUpdateDialog by
+    splashViewModel.showUpdateDialog.collectAsState()
+
+    val versionResponse by
+    splashViewModel.versionResponse.collectAsState()
+
+    val startupCompleted by
+    splashViewModel.startupCompleted.collectAsState()
 
     val sessionManager =
         remember {
@@ -79,44 +91,57 @@ fun SplashScreen(
         label = ""
     )
 
+    val versionName =
+        context.packageManager
+            .getPackageInfo(
+                context.packageName,
+                0
+            ).versionName ?: "0.0.0"
+
     LaunchedEffect(Unit) {
 
         startAnimation = true
 
-        delay(2500)
-
-        val firstName =
-
-            if (
-                sessionManager
-                    .isLoggedIn()
-            ) {
-
-                sessionManager
-                    .getFirstName()
-                    ?: "Guest"
-
-            } else {
-
-                "Guest"
-            }
-
-        navController.navigate(
-
-            "${Routes.HOME}/$firstName"
-
-        ) {
-
-            popUpTo(
-                Routes.SPLASH
-            ) {
-
-                inclusive = true
-            }
-
-            launchSingleTop = true
-        }
+        splashViewModel.checkLatestVersion(versionName)
     }
+//    LaunchedEffect(Unit) {
+//
+//        startAnimation = true
+//
+//        delay(2500)
+//
+//        val firstName =
+//
+//            if (
+//                sessionManager
+//                    .isLoggedIn()
+//            ) {
+//
+//                sessionManager
+//                    .getFirstName()
+//                    ?: "Guest"
+//
+//            } else {
+//
+//                "Guest"
+//            }
+//
+//        navController.navigate(
+//
+//            "${Routes.HOME}/$firstName"
+//
+//        ) {
+//
+//            popUpTo(
+//                Routes.SPLASH
+//            ) {
+//
+//                inclusive = true
+//            }
+//
+//            launchSingleTop = true
+//        }
+//    }
 
     Box(
 
@@ -238,13 +263,7 @@ fun SplashScreen(
                     )
             )
 
-            val versionName =
 
-                context.packageManager
-                    .getPackageInfo(
-                        context.packageName,
-                        0
-                    ).versionName
             Text(
                 text = "Version ${versionName ?: "0.0.0"}",
                 fontSize = 18.sp,
