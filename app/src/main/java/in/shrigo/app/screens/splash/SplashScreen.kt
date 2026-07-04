@@ -55,6 +55,24 @@ fun SplashScreen(
             )
         }
 
+    fun navigateToHome() {
+
+        val firstName =
+            if (sessionManager.isLoggedIn()) {
+                sessionManager.getFirstName() ?: "Guest"
+            } else {
+                "Guest"
+            }
+
+        navController.navigate("${Routes.HOME}/$firstName") {
+
+            popUpTo(Routes.SPLASH) {
+                inclusive = true
+            }
+
+            launchSingleTop = true
+        }
+    }
     var startAnimation by remember {
         mutableStateOf(false)
     }
@@ -104,44 +122,18 @@ fun SplashScreen(
 
         splashViewModel.checkLatestVersion(versionName)
     }
-//    LaunchedEffect(Unit) {
-//
-//        startAnimation = true
-//
-//        delay(2500)
-//
-//        val firstName =
-//
-//            if (
-//                sessionManager
-//                    .isLoggedIn()
-//            ) {
-//
-//                sessionManager
-//                    .getFirstName()
-//                    ?: "Guest"
-//
-//            } else {
-//
-//                "Guest"
-//            }
-//
-//        navController.navigate(
-//
-//            "${Routes.HOME}/$firstName"
-//
-//        ) {
-//
-//            popUpTo(
-//                Routes.SPLASH
-//            ) {
-//
-//                inclusive = true
-//            }
-//
-//            launchSingleTop = true
-//        }
-//    }
+
+    LaunchedEffect(startupCompleted) {
+
+        if (startupCompleted) {
+
+            delay(2500)
+
+            if (!showUpdateDialog) {
+                navigateToHome()
+            }
+        }
+    }
 
     Box(
 
@@ -278,6 +270,67 @@ fun SplashScreen(
                 text = "A Product of ShriAITech",
                 fontSize = 12.sp,
                 color = Color.LightGray.copy(alpha = 0.7f)
+            )
+        }
+        if (showUpdateDialog && versionResponse != null) {
+
+            androidx.compose.material3.AlertDialog(
+
+                onDismissRequest = {
+                    // Prevent dismiss by tapping outside
+                },
+
+                title = {
+                    Text(
+                        if (versionResponse!!.forceUpdate)
+                            "Update Required"
+                        else
+                            "Update Available"
+                    )
+                },
+
+                text = {
+                    Text(versionResponse!!.message)
+                },
+
+                confirmButton = {
+
+                    androidx.compose.material3.TextButton(
+
+                        onClick = {
+
+                            val intent = android.content.Intent(
+                                android.content.Intent.ACTION_VIEW,
+                                android.net.Uri.parse(
+                                    versionResponse!!.playStoreUrl
+                                )
+                            )
+
+                            context.startActivity(intent)
+                        }
+
+                    ) {
+
+                        Text("Update Now")
+                    }
+                },
+
+                dismissButton = {
+
+                    if (!versionResponse!!.forceUpdate) {
+
+                        androidx.compose.material3.TextButton(
+
+                            onClick = {
+                                navigateToHome()
+                            }
+
+                        ) {
+
+                            Text("Later")
+                        }
+                    }
+                }
             )
         }
     }

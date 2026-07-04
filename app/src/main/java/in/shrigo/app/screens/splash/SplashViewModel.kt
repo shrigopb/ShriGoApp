@@ -1,5 +1,6 @@
 package `in`.shrigo.app.screens.splash
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import `in`.shrigo.app.api.RetrofitClient
@@ -47,7 +48,25 @@ class SplashViewModel : ViewModel() {
 
                 val response =
                     repository.getLatestVersion()
+                Log.d(
+                    "VERSION_CHECK",
+                    "Current: $currentVersion"
+                )
 
+               Log.d(
+                    "VERSION_CHECK",
+                    "Latest : ${response.latestVersion}"
+                )
+
+                Log.d(
+                    "VERSION_CHECK",
+                    "Update : ${
+                        VersionUtils.isUpdateAvailable(
+                            currentVersion,
+                            response.latestVersion
+                        )
+                    }"
+                )
                 _versionResponse.value =
                     response
 
@@ -56,10 +75,13 @@ class SplashViewModel : ViewModel() {
                         currentVersion,
                         response.latestVersion
                     )
-
+                android.util.Log.d(
+                    "VERSION_CHECK",
+                    "Show Dialog = ${_showUpdateDialog.value}"
+                )
             } catch (e: Exception) {
 
-                android.util.Log.e(
+             Log.e(
                     "SplashViewModel",
                     "Version check failed",
                     e
