@@ -252,12 +252,12 @@ fun SplashScreen(
             )
 
             Spacer(
-                modifier = Modifier.height(6.dp)
+                modifier = Modifier.height(10.dp)
             )
 
             Text(
                 text = "A Product of ShriAITech",
-                fontSize = 14.sp,
+                fontSize = 12.sp,
                 color = Color.LightGray.copy(alpha = 0.7f)
             )
         }
