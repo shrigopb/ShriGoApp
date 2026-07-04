@@ -21,6 +21,7 @@ import `in`.shrigo.app.models.NotificationResponse
 import `in`.shrigo.app.models.SignupRequest
 import `in`.shrigo.app.models.SignupResponse
 import `in`.shrigo.app.models.UpdateRideResponse
+import `in`.shrigo.app.models.VersionResponse
 import retrofit2.http.DELETE
 import retrofit2.http.PUT
 
@@ -223,4 +224,11 @@ interface ApiService {
         uniqueId: String
 
     ): Response<Unit>
+
+    //--------------------------------
+    // Latest Version Update
+    //--------------------------------
+    @GET("api/VersionApi/Latest")
+    suspend fun getLatestVersion(): VersionResponse
 }
+
