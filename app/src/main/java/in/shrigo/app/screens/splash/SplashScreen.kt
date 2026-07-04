@@ -246,12 +246,19 @@ fun SplashScreen(
                         0
                     ).versionName
             Text(
-
-                text ="Version $versionName",
+                text = "Version ${versionName ?: "0.0.0"}",
                 fontSize = 18.sp,
-
                 color = Color.LightGray.copy(alpha = 0.7f)
+            )
 
+            Spacer(
+                modifier = Modifier.height(6.dp)
+            )
+
+            Text(
+                text = "A Product of ShriAITech",
+                fontSize = 14.sp,
+                color = Color.LightGray.copy(alpha = 0.7f)
             )
         }
     }
