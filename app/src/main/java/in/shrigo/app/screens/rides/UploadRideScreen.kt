@@ -65,7 +65,7 @@ fun UploadRideScreen(
     //----------------------------------
     // Form States
     //----------------------------------
-
+    //val rideSource by viewModel.rideSource.collectAsState()
     var rideSource by remember {
         mutableStateOf("")
     }
@@ -252,13 +252,18 @@ fun UploadRideScreen(
 
             OutlinedTextField(
 
-                value =
-                    rideSource,
+                value = rideSource,
 
-                onValueChange = {},
+                onValueChange = {
 
-                readOnly =
-                    true,
+                    rideSource = it
+
+                    viewModel.searchPlaces(it)
+
+                    expandedSource = true
+                },
+
+                readOnly = false,
 
                 label = {
                     Text("Ride From")

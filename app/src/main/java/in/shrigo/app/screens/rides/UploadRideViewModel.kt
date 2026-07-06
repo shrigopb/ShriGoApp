@@ -1,20 +1,34 @@
 package `in`.shrigo.app.screens.rides
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import `in`.shrigo.app.api.RetrofitClient
+import `in`.shrigo.app.models.PlaceSuggestion
 import `in`.shrigo.app.models.SignupRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import `in`.shrigo.app.models.UploadRideRequest
+import `in`.shrigo.app.repository.PlacesRepository
 import `in`.shrigo.app.repository.RideRepository
 
-class UploadRideViewModel : ViewModel() {
+class UploadRideViewModel(
+    application: Application
+) : AndroidViewModel(application){
 
     private val repository =
         RideRepository()
+
+    private val placesRepository =
+        PlacesRepository(getApplication())
+    private val _googleSuggestions =
+        MutableStateFlow<List<PlaceSuggestion>>(emptyList())
+
+    val googleSuggestions: StateFlow<List<PlaceSuggestion>>
+            = _googleSuggestions
 
     private val _isLoading =
         MutableStateFlow(false)
@@ -37,6 +51,41 @@ class UploadRideViewModel : ViewModel() {
             StateFlow<String?>
             = _error
 
+    private val _rideSource =
+        MutableStateFlow("")
+
+    val rideSource: StateFlow<String> = _rideSource
+
+    fun onRideSourceChanged(value: String) {
+
+        _rideSource.value = value
+
+        searchPlaces(value)
+    }
+    fun searchPlaces(query: String) {
+
+        Log.d("GOOGLE_PLACES", "searchPlaces() called with: $query")
+
+        viewModelScope.launch {
+
+            try {
+
+                val results = placesRepository.searchPlaces(query)
+
+                Log.d("GOOGLE_PLACES", "Found ${results.size} places")
+
+                results.forEach {
+                    Log.d("GOOGLE_PLACES", it.primaryText)
+                }
+
+                _googleSuggestions.value = results
+
+            } catch (e: Exception) {
+
+                Log.e("GOOGLE_PLACES", "Exception", e)
+            }
+        }
+    }
     fun uploadRide(
 
         request:
