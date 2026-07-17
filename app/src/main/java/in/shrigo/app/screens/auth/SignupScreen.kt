@@ -750,8 +750,7 @@ fun SignupScreen(
                             userPswd =
                                 password.trim(),
 
-                            userRole =
-                                "Driver",
+                           driverRole = "Driver",
 
                             subscription =
                                 selectedSubscription,

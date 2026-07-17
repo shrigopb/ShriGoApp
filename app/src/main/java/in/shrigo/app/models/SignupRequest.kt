@@ -30,24 +30,30 @@ data class SignupRequest(
     // Driver Fields
     //----------------------------------
 
-    @SerializedName("UserFirstName")
+    //----------------------------------
+// Driver Fields
+//----------------------------------
+
+    @SerializedName("DriverFirstName")
     val userFirstName: String? = null,
 
-    @SerializedName("UserLastName")
+    @SerializedName("DriverLastName")
     val userLastName: String? = null,
 
-    @SerializedName("UserAge")
+    @SerializedName("DriverAge")
     val userAge: String? = null,
 
-    @SerializedName("UserEmail")
+    @SerializedName("DriverEmail")
     val userEmail: String? = null,
 
-    @SerializedName("UserContact")
+    @SerializedName("DriverContact")
     val userContact: String? = null,
 
-    @SerializedName("UserPswd")
+    @SerializedName("DriverPswd")
     val userPswd: String? = null,
 
+    @SerializedName("DriverRole")
+    val driverRole: String? = null,
     //----------------------------------
     // Shared
     //----------------------------------
