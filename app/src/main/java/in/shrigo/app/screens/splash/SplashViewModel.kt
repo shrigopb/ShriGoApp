@@ -10,6 +10,7 @@ import `in`.shrigo.app.utils.VersionUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 
 class SplashViewModel : ViewModel() {
 
@@ -45,40 +46,60 @@ class SplashViewModel : ViewModel() {
         viewModelScope.launch {
 
             try {
+                val response = withTimeoutOrNull(5000) {
 
-                val response =
                     repository.getLatestVersion()
-                Log.d(
-                    "VERSION_CHECK",
-                    "Current: $currentVersion"
-                )
 
-               Log.d(
-                    "VERSION_CHECK",
-                    "Latest : ${response.latestVersion}"
-                )
+                }
 
-                Log.d(
-                    "VERSION_CHECK",
-                    "Update : ${
+
+
+                if (response != null) {
+                    val updateAvailable =
                         VersionUtils.isUpdateAvailable(
                             currentVersion,
                             response.latestVersion
                         )
-                    }"
-                )
-                _versionResponse.value =
-                    response
-
-                _showUpdateDialog.value =
-                    VersionUtils.isUpdateAvailable(
-                        currentVersion,
-                        response.latestVersion
+                    Log.d(
+                        "VERSION_CHECK",
+                        "Current: $currentVersion"
                     )
-                android.util.Log.d(
-                    "VERSION_CHECK",
-                    "Show Dialog = ${_showUpdateDialog.value}"
-                )
+
+                    Log.d(
+                        "VERSION_CHECK",
+                        "Latest : ${response.latestVersion}"
+                    )
+
+                    Log.d(
+                        "VERSION_CHECK",
+                        "Update : ${updateAvailable}"
+                    )
+
+                    _versionResponse.value = response
+                    Log.d("VERSION_CHECK", "Response = $response")
+                    Log.d("VERSION_CHECK", "Response Object = $response")
+                    Log.d("VERSION_CHECK", "latestVersion = ${response.latestVersion}")
+                    Log.d("VERSION_CHECK", "minimumVersion = ${response.minimumVersion}")
+                    Log.d("VERSION_CHECK", "forceUpdate = ${response.forceUpdate}")
+                    Log.d("VERSION_CHECK", "playStoreUrl = ${response.playStoreUrl}")
+                    Log.d("VERSION_CHECK", "message = ${response.message}")
+
+                    _showUpdateDialog.value =updateAvailable
+
+                    Log.d(
+                        "VERSION_CHECK",
+                        "Show Dialog = ${_showUpdateDialog.value}"
+                    )
+
+                } else {
+
+                    Log.d(
+                        "VERSION_CHECK",
+                        "Version API Timeout"
+                    )
+
+                    _showUpdateDialog.value = false
+                }
             } catch (e: Exception) {
 
              Log.e(

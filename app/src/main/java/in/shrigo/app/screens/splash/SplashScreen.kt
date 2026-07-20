@@ -1,6 +1,7 @@
 package `in`.shrigo.app.screens.splash
 
 
+import android.util.Log
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -28,7 +29,7 @@ import `in`.shrigo.app.navigation.Routes
 import `in`.shrigo.app.utils.SessionManager
 import kotlinx.coroutines.delay
 import androidx.lifecycle.viewmodel.compose.viewModel
-
+import androidx.compose.material3.AlertDialog
 @Composable
 fun SplashScreen(
     navController: NavController
@@ -123,9 +124,9 @@ fun SplashScreen(
         splashViewModel.checkLatestVersion(versionName)
     }
 
-    LaunchedEffect(startupCompleted) {
+    LaunchedEffect(startupCompleted, showUpdateDialog) {
 
-        if (startupCompleted) {
+        if (startupCompleted && !showUpdateDialog) {
 
             delay(2500)
 
@@ -272,9 +273,12 @@ fun SplashScreen(
                 color = Color.LightGray.copy(alpha = 0.7f)
             )
         }
+        Log.d("VERSION_CHECK", "forceUpdate = ${versionResponse?.forceUpdate}")
+        Log.d("VERSION_CHECK", "message = ${versionResponse?.message}")
+        Log.d("VERSION_CHECK", "playStoreUrl = ${versionResponse?.playStoreUrl}")
         if (showUpdateDialog && versionResponse != null) {
 
-            androidx.compose.material3.AlertDialog(
+            AlertDialog(
 
                 onDismissRequest = {
                     // Prevent dismiss by tapping outside
@@ -282,15 +286,15 @@ fun SplashScreen(
 
                 title = {
                     Text(
-                        if (versionResponse!!.forceUpdate)
+                        if (versionResponse?.forceUpdate == true)
                             "Update Required"
                         else
-                            "Update Available"
+                            versionResponse?.updateTitle ?: "Update Available"
                     )
                 },
 
                 text = {
-                    Text(versionResponse!!.message)
+                    Text(versionResponse?.message ?: "New version available.")
                 },
 
                 confirmButton = {
@@ -302,7 +306,7 @@ fun SplashScreen(
                             val intent = android.content.Intent(
                                 android.content.Intent.ACTION_VIEW,
                                 android.net.Uri.parse(
-                                    versionResponse!!.playStoreUrl
+                                    versionResponse?.playStoreUrl ?: return@TextButton
                                 )
                             )
 
@@ -317,7 +321,7 @@ fun SplashScreen(
 
                 dismissButton = {
 
-                    if (!versionResponse!!.forceUpdate) {
+                    if (versionResponse?.forceUpdate == false) {
 
                         androidx.compose.material3.TextButton(
 
@@ -332,6 +336,23 @@ fun SplashScreen(
                     }
                 }
             )
+
+            //Code for Testing
+//            if (showUpdateDialog && versionResponse != null) {
+//
+//                Box(
+//                    modifier = Modifier
+//                        .fillMaxSize()
+//                        .background(Color.Red.copy(alpha = 0.9f)),
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    Text(
+//                        text = "UPDATE DIALOG SHOULD BE HERE",
+//                        color = Color.White,
+//                        fontSize = 28.sp
+//                    )
+//                }
+//            }
         }
     }
 }

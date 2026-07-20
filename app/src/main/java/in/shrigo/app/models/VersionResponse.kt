@@ -13,7 +13,10 @@ data class VersionResponse(
     @SerializedName("forceUpdate")
     val forceUpdate: Boolean,
 
-    @SerializedName("message")
+    @SerializedName("updateTitle")
+    val updateTitle: String,
+
+    @SerializedName("updateMessage")
     val message: String,
 
     @SerializedName("playStoreUrl")
