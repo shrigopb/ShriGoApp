@@ -35,7 +35,8 @@ fun UploadRideScreen(
         viewModel()
 
 ) {
-
+    val googleSuggestions by
+    viewModel.googleSuggestions.collectAsState()
     val context =
         LocalContext.current
 
@@ -65,7 +66,7 @@ fun UploadRideScreen(
     //----------------------------------
     // Form States
     //----------------------------------
-
+    //val rideSource by viewModel.rideSource.collectAsState()
     var rideSource by remember {
         mutableStateOf("")
     }
@@ -170,7 +171,7 @@ fun UploadRideScreen(
     // UI
     //----------------------------------
 
-     Column(
+    Column(
 
         modifier = Modifier
             .fillMaxSize()
@@ -252,13 +253,18 @@ fun UploadRideScreen(
 
             OutlinedTextField(
 
-                value =
-                    rideSource,
+                value = rideSource,
 
-                onValueChange = {},
+                onValueChange = {
 
-                readOnly =
-                    true,
+                    rideSource = it
+
+                    viewModel.onRideSourceChanged(it)
+
+                    expandedSource = true
+                },
+
+                readOnly = false,
 
                 label = {
                     Text("Ride From")
@@ -283,21 +289,18 @@ fun UploadRideScreen(
 
             ) {
 
-                rideLocations.forEach {
+                googleSuggestions.forEach { place ->
 
                     DropdownMenuItem(
 
                         text = {
-                            Text(it)
+                            Text(place.primaryText?:"")
                         },
 
                         onClick = {
 
-                            rideSource =
-                                it
-
-                            expandedSource =
-                                false
+                            rideSource = place.primaryText?:""
+                            expandedSource = false
                         }
                     )
                 }
@@ -490,7 +493,7 @@ fun UploadRideScreen(
         //--------------------------------------------------
         //Ride Date
         //------------------------------------------------
-         val calendar =
+        val calendar =
 
             Calendar.getInstance()
 
@@ -581,7 +584,7 @@ fun UploadRideScreen(
         //-----------------------------------
         //Ride time
         //-----------------------------------
-       val rideTimes = listOf(
+        val rideTimes = listOf(
 
             "01:00 am",
             "02:00 am",
@@ -691,7 +694,7 @@ fun UploadRideScreen(
         }
 
         val seatOptions = listOf( "1", "2", "3", "4", "5", "6" ,"7")
-         ExposedDropdownMenuBox(
+        ExposedDropdownMenuBox(
 
             expanded =
                 expandedSeats,
