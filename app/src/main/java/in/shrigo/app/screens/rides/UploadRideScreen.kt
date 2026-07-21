@@ -35,8 +35,15 @@ fun UploadRideScreen(
         viewModel()
 
 ) {
-    val googleSuggestions by
-    viewModel.googleSuggestions.collectAsState()
+    val fromSuggestions by
+    viewModel.fromSuggestions.collectAsState()
+
+    val viaSuggestions by
+    viewModel.viaSuggestions.collectAsState()
+
+    val toSuggestions by
+    viewModel.toSuggestions.collectAsState()
+
     val context =
         LocalContext.current
 
@@ -259,7 +266,7 @@ fun UploadRideScreen(
 
                     rideSource = it
 
-                    viewModel.onRideSourceChanged(it)
+                    viewModel.searchFromPlaces(it)
 
                     expandedSource = true
                 },
@@ -289,7 +296,7 @@ fun UploadRideScreen(
 
             ) {
 
-                googleSuggestions.forEach { place ->
+              fromSuggestions.forEach { place ->
 
                     DropdownMenuItem(
 
@@ -361,10 +368,16 @@ fun UploadRideScreen(
                 value =
                     rideDesti,
 
-                onValueChange = {},
+                onValueChange = {
 
-                readOnly =
-                    true,
+                    rideDesti = it
+
+                    viewModel.searchToPlaces(it)
+
+                    expandedDesti = true
+                },
+
+                        readOnly = false,
 
                 label = {
                     Text("Ride To")
@@ -389,21 +402,19 @@ fun UploadRideScreen(
 
             ) {
 
-                rideDestilist.forEach {
+                toSuggestions.forEach { place ->
 
                     DropdownMenuItem(
 
                         text = {
-                            Text(it)
+                            Text(place.primaryText ?: "")
                         },
 
                         onClick = {
 
-                            rideDesti =
-                                it
+                            rideDesti = place.primaryText ?: ""
 
-                            expandedDesti =
-                                false
+                            expandedDesti = false
                         }
                     )
                 }
@@ -438,10 +449,16 @@ fun UploadRideScreen(
                 value =
                     rideVia,
 
-                onValueChange = {},
+                onValueChange = {
 
-                readOnly =
-                    true,
+                    rideVia = it
+
+                    viewModel.searchViaPlaces(it)
+
+                    expandedVia = true
+                },
+
+                        readOnly = false,
 
                 label = {
                     Text("Via")
@@ -466,21 +483,19 @@ fun UploadRideScreen(
 
             ) {
 
-                viaRoutes.forEach {
+                viaSuggestions.forEach { place ->
 
                     DropdownMenuItem(
 
                         text = {
-                            Text(it)
+                            Text(place.primaryText ?: "")
                         },
 
                         onClick = {
 
-                            rideVia =
-                                it
+                            rideVia = place.primaryText ?: ""
 
-                            expandedVia =
-                                false
+                            expandedVia = false
                         }
                     )
                 }

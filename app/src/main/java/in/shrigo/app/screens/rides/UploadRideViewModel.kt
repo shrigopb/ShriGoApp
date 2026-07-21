@@ -22,13 +22,24 @@ class UploadRideViewModel(
     private val repository =
         RideRepository()
 
+    //--------Google search places --------------------------
     private val placesRepository =
         PlacesRepository(getApplication())
-    private val _googleSuggestions =
+
+    private val _fromSuggestions =
         MutableStateFlow<List<PlaceSuggestion>>(emptyList())
 
-    val googleSuggestions: StateFlow<List<PlaceSuggestion>>
-            = _googleSuggestions
+    val fromSuggestions = _fromSuggestions
+    private val _viaSuggestions =
+        MutableStateFlow<List<PlaceSuggestion>>(emptyList())
+
+    val viaSuggestions = _viaSuggestions
+
+    private val _toSuggestions =
+        MutableStateFlow<List<PlaceSuggestion>>(emptyList())
+
+    val toSuggestions = _toSuggestions
+    //------------------------------------------
 
     private val _isLoading =
         MutableStateFlow(false)
@@ -55,15 +66,18 @@ class UploadRideViewModel(
         MutableStateFlow("")
 
     val rideSource: StateFlow<String> = _rideSource
-
+    
     fun onRideSourceChanged(value: String) {
 
         _rideSource.value = value
 
-        searchPlaces(value)
+        searchFromPlaces(value)
     }
-    fun searchPlaces(query: String) {
-
+    private fun searchPlaces(
+        query: String,
+        suggestions: MutableStateFlow<List<PlaceSuggestion>>
+    )
+    {
         Log.d("GOOGLE_PLACES", "searchPlaces() called with: $query")
 
         viewModelScope.launch {
@@ -81,7 +95,7 @@ class UploadRideViewModel(
                     )
                 }
 
-                _googleSuggestions.value = results
+                suggestions.value = results
 
             } catch (e: Exception) {
 
@@ -89,6 +103,19 @@ class UploadRideViewModel(
             }
         }
     }
+
+    fun searchFromPlaces(query: String) {
+        searchPlaces(query, _fromSuggestions)
+    }
+
+    fun searchToPlaces(query: String) {
+        searchPlaces(query, _toSuggestions)
+    }
+
+    fun searchViaPlaces(query: String) {
+        searchPlaces(query, _viaSuggestions)
+    }
+
     fun uploadRide(
 
         request:
