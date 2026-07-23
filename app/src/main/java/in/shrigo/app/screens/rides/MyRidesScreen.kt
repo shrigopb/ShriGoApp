@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.Alignment
 import androidx.compose.material.icons.filled.StarBorder
 import androidx.compose.material3.Icon
@@ -30,7 +31,11 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun MyRidesScreen(
@@ -417,7 +422,9 @@ fun RideCard(
     onFavorite: (MyRideResponse) -> Unit
 
 ) {
-
+    var isFavorite by remember {
+        mutableStateOf(false)
+    }
     Card(
 
         modifier =
@@ -471,11 +478,13 @@ fun RideCard(
 
                 IconButton(
 
+                    enabled = !isFavorite,
+
                     onClick = {
-                        Log.d("FAVORITE_CLICK", "Star clicked")
-                        // Save Favorite Route
+
                         onFavorite(ride)
 
+                        isFavorite = true
                     }
 
                 ) {
@@ -483,10 +492,22 @@ fun RideCard(
                     Icon(
 
                         imageVector =
-                            Icons.Default.StarBorder,
+                            if (isFavorite)
+                                Icons.Default.Star
+                            else
+                                Icons.Default.StarBorder,
+
+                        tint =
+                            if (isFavorite)
+                                Color(0xFFFFC107)
+                            else
+                                MaterialTheme.colorScheme.onSurface,
 
                         contentDescription =
-                            "Favorite Route"
+                            if (isFavorite)
+                                "Favorite Saved"
+                            else
+                                "Save Favorite"
                     )
                 }
             }
