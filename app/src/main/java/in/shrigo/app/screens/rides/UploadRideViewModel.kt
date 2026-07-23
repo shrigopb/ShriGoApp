@@ -7,11 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import `in`.shrigo.app.api.RetrofitClient
 import `in`.shrigo.app.models.PlaceSuggestion
+import `in`.shrigo.app.models.SaveFavoriteRequest
 import `in`.shrigo.app.models.SignupRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import `in`.shrigo.app.models.UploadRideRequest
+import `in`.shrigo.app.repository.FavoriteRouteRepository
 import `in`.shrigo.app.repository.PlacesRepository
 import `in`.shrigo.app.repository.RideRepository
 
@@ -22,6 +24,13 @@ class UploadRideViewModel(
     private val repository =
         RideRepository()
 
+    private val favoriteRouteRepository =
+        FavoriteRouteRepository()
+    private val _favoriteSaved =
+        MutableStateFlow(false)
+
+    val favoriteSaved: StateFlow<Boolean> =
+        _favoriteSaved
     //--------Google search places --------------------------
     private val placesRepository =
         PlacesRepository(getApplication())
@@ -245,7 +254,57 @@ class UploadRideViewModel(
                 false
         }
     }
+    //------------------------------------
+    // Save Favorite
+    //------------------------------------
+    fun saveFavorite(
 
+        request: SaveFavoriteRequest
+
+    ) {
+        viewModelScope.launch {
+            try {
+                _favoriteSaved.value = false
+                _error.value = null
+                _isLoading.value = true
+                Log.d(
+                    "SAVE_FAVORITE",
+                    "Saving favorite route..."
+                )
+                val response = favoriteRouteRepository.saveFavorite(request)
+                Log.d(
+                    "SAVE_FAVORITE",
+                    "Code = ${response.code()}"
+                )
+
+                Log.d(
+                    "SAVE_FAVORITE",
+                    "Body = ${response.body()}"
+                )
+                if (response.isSuccessful &&
+                    response.body()?.success == true
+                ) {
+
+                    // Favorite saved
+                    _favoriteSaved.value = true
+                } else {
+
+                    // Show error
+                    _error.value = response.body()?.message
+                        ?: "Failed to save favorite route."
+                }
+            }catch (e: Exception){
+                Log.e(
+                    "SAVE_FAVORITE",
+                    e.message ?: "Unknown Error"
+                )
+                _error.value = e.message
+
+            }finally {
+                _isLoading.value = false
+            }
+        }
+    }
     //------------------------------------
     // Signup
     //--------------------------------------

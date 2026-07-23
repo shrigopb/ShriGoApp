@@ -17,6 +17,20 @@ import androidx.navigation.NavController
 import `in`.shrigo.app.models.MyRideResponse
 import `in`.shrigo.app.navigation.Routes
 import `in`.shrigo.app.utils.SessionManager
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.ui.Alignment
+import androidx.compose.material.icons.filled.StarBorder
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+
 
 @Composable
 fun MyRidesScreen(
@@ -24,9 +38,7 @@ fun MyRidesScreen(
     navController:
     NavController,
 
-    viewModel:
-    MyRidesViewModel =
-        viewModel()
+    viewModel: MyRidesViewModel = viewModel()
 
 ) {
 
@@ -91,11 +103,9 @@ fun MyRidesScreen(
                 MyRideResponse?
                 >(null)
     }
-    val deleteSuccess by
+    val deleteSuccess by viewModel.deleteSuccess.collectAsState()
 
-    viewModel
-        .deleteSuccess
-        .collectAsState()
+    val favoriteSaved by viewModel.favoriteSaved.collectAsState()
     //-----------------------------------
     // Upload permission
     //-----------------------------------
@@ -150,6 +160,20 @@ fun MyRidesScreen(
 
             viewModel
                 .clearDeleteSuccess()
+        }
+    }
+
+    LaunchedEffect(favoriteSaved) {
+
+        if (favoriteSaved) {
+
+            Toast.makeText(
+                context,
+                "Route added to Favorites",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            viewModel.clearFavoriteSaved()
         }
     }
     //-----------------------------------
@@ -292,6 +316,10 @@ fun MyRidesScreen(
 
                                     rideToDelete =
                                         ride
+                                },
+                                onFavorite = {
+
+                                    viewModel.saveFavorite(it)
                                 }
                             )
                         }
@@ -385,7 +413,8 @@ fun RideCard(
     MyRideResponse,
     onEdit: () -> Unit,
     onDelete:
-        () -> Unit
+        () -> Unit,
+    onFavorite: (MyRideResponse) -> Unit
 
 ) {
 
@@ -412,151 +441,141 @@ fun RideCard(
                     )
         ) {
 
-            Text(
-
-                text =
-
-                    "${ride.rideSource}" +
-                            " → " +
-                            "${ride.rideDesti}",
-
-                style =
-                    MaterialTheme
-                        .typography
-                        .titleMedium
-            )
-
-            Spacer(
-                modifier =
-                    Modifier.height(
-                        6.dp
-                    )
-            )
-
-            Text(
-                text =
-                    "Date: ${ride.rideDate}"
-            )
-            Spacer(
-                modifier =
-                    Modifier.height(
-                        12.dp
-                    )
-            )
-
             Row(
 
                 modifier =
                     Modifier.fillMaxWidth(),
 
                 horizontalArrangement =
-                    Arrangement.spacedBy(
-                        8.dp
-                    )
+                    Arrangement.SpaceBetween,
+
+                verticalAlignment =
+                    Alignment.CenterVertically
+
             ) {
 
-                Button(
+                Text(
+
+                    text =
+                        "${ride.rideSource} → ${ride.rideDesti}",
+                    modifier = Modifier.weight(1f),
+
+                    maxLines = 2,
+
+                    overflow = TextOverflow.Ellipsis,
+                    style =
+                        MaterialTheme
+                            .typography
+                            .titleMedium
+                )
+
+                IconButton(
 
                     onClick = {
+                        Log.d("FAVORITE_CLICK", "Star clicked")
+                        // Save Favorite Route
+                        onFavorite(ride)
 
-                        onEdit()
-                    },
-
-                    modifier =
-                        Modifier.weight(1f)
+                    }
 
                 ) {
 
-                    Text(
-                        "Edit Ride"
+                    Icon(
+
+                        imageVector =
+                            Icons.Default.StarBorder,
+
+                        contentDescription =
+                            "Favorite Route"
                     )
                 }
-
-//                Button(
-//
-//                    onClick = {
-//
-//                        onDelete()
-//                    },
-//
-//                    modifier =
-//                        Modifier.weight(1f),
-//
-//                    colors =
-//
-//                        ButtonDefaults
-//                            .buttonColors(
-//
-//                                containerColor =
-//                                    MaterialTheme
-//                                        .colorScheme
-//                                        .error
-//                            )
-//                ) {
-//
-//                    Text(
-//                        "Delete Ride"
-//                    )
-//                }
             }
 
-            //-----------------------------------
-            // Time formatting
-            //-----------------------------------
-
+            Spacer(
+                modifier = Modifier.height(12.dp)
+            )
             val formattedTime = try {
 
-                val inputFormat =
-
-                    java.text.SimpleDateFormat(
-                        "HH:mm:ss",
-                        java.util.Locale.getDefault()
-                    )
-
-                val outputFormat =
-
-                    java.text.SimpleDateFormat(
-                        "hh:mm a",
-                        java.util.Locale.getDefault()
-                    )
-
-                val date =
-
-                    inputFormat.parse(
-                        ride.rideTime
-                    )
-
-                outputFormat.format(
-                    date!!
+                val inputFormat = java.text.SimpleDateFormat(
+                    "HH:mm:ss",
+                    java.util.Locale.getDefault()
                 )
 
-            } catch (
-                e: Exception
-            ) {
+                val outputFormat = java.text.SimpleDateFormat(
+                    "hh:mm a",
+                    java.util.Locale.getDefault()
+                )
+
+                val date = inputFormat.parse(ride.rideTime)
+
+                outputFormat.format(date!!)
+
+            } catch (e: Exception) {
 
                 ride.rideTime
             }
-
             Text(
-                text =
-                    "Time: $formattedTime"
+                buildAnnotatedString {
+
+                    withStyle(
+                        SpanStyle(fontWeight = FontWeight.SemiBold)
+                    ) {
+                        append("Date : ")
+                    }
+                    append("${ride.rideDate}\n\n")
+
+                    withStyle(
+                        SpanStyle(fontWeight = FontWeight.SemiBold)
+                    ) {
+                        append("Time : ")
+                    }
+                    append("$formattedTime\n")
+
+                    withStyle(
+                        SpanStyle(fontWeight = FontWeight.SemiBold)
+                    ) {
+                        append("Seats : ")
+                    }
+                    append("${ride.rideSeats}\n")
+
+                    withStyle(
+                        SpanStyle(fontWeight = FontWeight.SemiBold)
+                    ) {
+                        append("Price : ")
+                    }
+                    append("₹${ride.ridePrice}\n")
+
+                    withStyle(
+                        SpanStyle(fontWeight = FontWeight.SemiBold)
+                    ) {
+                        append("Via : ")
+                    }
+                    append(ride.rideVia)
+                },
+
+                style = MaterialTheme.typography.bodyLarge
             )
 
-            Text(
-                text =
-                    "Seats: ${ride.rideSeats}"
+            Spacer(
+                modifier = Modifier.height(20.dp)
             )
 
-            Text(
-                text =
-                    "Price: ₹${ride.ridePrice}"
-            )
+            Button(
 
-            Text(
-                text =
-                    "Via: ${ride.rideVia}"
-            )
+                onClick = {
+                    onEdit()
+                },
+
+                modifier = Modifier.fillMaxWidth()
+
+            ) {
+
+                Text("Edit Ride")
+            }
+
         }
     }
-
 }
+
+
+

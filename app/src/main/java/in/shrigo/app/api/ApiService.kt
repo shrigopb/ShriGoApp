@@ -2,6 +2,8 @@ package `in`.shrigo.app.api
 
 import `in`.shrigo.app.models.BookRideRequest
 import `in`.shrigo.app.models.BookingResponse
+import `in`.shrigo.app.models.FavoriteRoute
+import `in`.shrigo.app.models.FavoriteRouteResponse
 import `in`.shrigo.app.models.ForgotPasswordRequest
 import `in`.shrigo.app.models.ForgotPasswordResponse
 import `in`.shrigo.app.models.Ride
@@ -18,8 +20,10 @@ import `in`.shrigo.app.models.UploadRideResponse
 import `in`.shrigo.app.models.MyRideResponse
 import `in`.shrigo.app.models.NotificationCountResponse
 import `in`.shrigo.app.models.NotificationResponse
+import `in`.shrigo.app.models.SaveFavoriteRequest
 import `in`.shrigo.app.models.SignupRequest
 import `in`.shrigo.app.models.SignupResponse
+import `in`.shrigo.app.models.UpdateFavoriteRequest
 import `in`.shrigo.app.models.UpdateRideResponse
 import `in`.shrigo.app.models.VersionResponse
 import retrofit2.http.DELETE
@@ -230,5 +234,35 @@ interface ApiService {
     //--------------------------------
     @GET("api/VersionApi/Latest")
     suspend fun getLatestVersion(): VersionResponse
+
+    //-------------------------------
+    //Save Favorite route
+    //-------------------------------
+    @POST("api/FavoriteRouteApi/SaveFavorite")
+    suspend fun saveFavorite(
+        @Body request: SaveFavoriteRequest
+    ): Response<FavoriteRouteResponse>
+
+    @GET("api/FavoriteRouteApi/GetFavorites/{driverUniqueId}")
+    suspend fun getFavorites(
+        @Path("driverUniqueId") driverUniqueId: String
+    ): Response<List<FavoriteRoute>>
+
+    @DELETE("api/FavoriteRouteApi/DeleteFavorite/{id}")
+    suspend fun deleteFavorite(
+        @Path("id") id: Int
+    ): Response<FavoriteRouteResponse>
+
+    @PUT("api/FavoriteRouteApi/UpdateFavorite/{favId}")
+    suspend fun updateFavorite(
+        @Path("favId") favId: Int,
+        @Body request: FavoriteRoute
+    ): Response<FavoriteRouteResponse>
+
+    @PUT("api/FavoriteRouteApi/UpdateFavorite/{favId}")
+    suspend fun updateFavorite(
+        @Path("favId") favId: Int,
+        @Body request: UpdateFavoriteRequest
+    ): Response<FavoriteRouteResponse>
 }
 
