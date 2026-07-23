@@ -9,13 +9,20 @@ import `in`.shrigo.app.repository.MyRidesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import `in`.shrigo.app.repository.FavoriteRouteRepository
+import `in`.shrigo.app.models.SaveFavoriteRequest
+
+
 
 class MyRidesViewModel
     : ViewModel() {
 
-    private val repository =
 
-        MyRidesRepository()
+      private val repository =  MyRidesRepository()
+    private val favoriteRepository = FavoriteRouteRepository()
+
+    private val _favoriteSaved = MutableStateFlow(false)
+    val favoriteSaved: StateFlow<Boolean> = _favoriteSaved
 
     //-----------------------------------
     // Rides
@@ -198,4 +205,69 @@ class MyRidesViewModel
         }
     }
 
+    //------------------------
+    //
+    //------------------------
+    fun saveFavorite(
+        ride: MyRideResponse
+    ) {
+
+        viewModelScope.launch {
+
+            try {
+
+                val request = SaveFavoriteRequest(
+
+                    driverUniqueId = ride.driverUniqueId ?: "",
+
+                    favoriteName = "${ride.rideSource} → ${ride.rideDesti}",
+
+                    routeName = "${ride.rideSource} → ${ride.rideDesti}",
+
+                    rideFrom = ride.rideSource ?: "",
+
+                    rideVia = ride.rideVia ?: "",
+
+                    rideTo = ride.rideDesti ?: "",
+
+                    rideTime = ride.rideTime ?: "",
+
+                    ridePrice = ride.ridePrice?.toDoubleOrNull() ?: 0.0,
+
+                    rideSeats = ride.rideSeats?.toIntOrNull() ?: 0
+                )
+
+                val response = favoriteRepository.saveFavorite(request)
+
+                if (response.isSuccessful) {
+
+                    Log.d("FAVORITE_ROUTE", "Saved")
+
+                } else {
+
+                    Log.e("FAVORITE_ROUTE", "HTTP ${response.code()}")
+
+                    Log.e(
+                        "FAVORITE_ROUTE",
+                        response.errorBody()?.string() ?: "No error body"
+                    )
+                }
+
+            } catch (e: Exception) {
+
+                Log.e(
+                    "FAVORITE_ROUTE",
+                    "Exception : ${e.message}",
+                    e
+                )
+            }
+        }
+
+
+    }
+
+
+    fun clearFavoriteSaved() {
+        _favoriteSaved.value = false
+    }
 }
