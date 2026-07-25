@@ -28,4 +28,6 @@ object Routes {
         "forgot_password"
 
     const val NOTIFICATIONS = "notifications"
+
+    const val FAVORITE_ROUTES = "favorite_routes"
 }
