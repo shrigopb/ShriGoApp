@@ -10,6 +10,7 @@ import `in`.shrigo.app.screens.auth.LoginScreen
 import `in`.shrigo.app.screens.auth.RoleSelectionScreen
 import `in`.shrigo.app.screens.auth.SignupScreen
 import `in`.shrigo.app.screens.bookings.BookingScreen
+import `in`.shrigo.app.screens.favorite.FavoriteRouteScreen
 import `in`.shrigo.app.screens.home.HomeScreen
 import `in`.shrigo.app.screens.rides.MyRidesScreen
 import `in`.shrigo.app.screens.profile.ProfileScreen
@@ -401,6 +402,18 @@ fun AppNavHost() {
 
                 ForgotPasswordScreen(
                     navController
+                )
+            }
+
+            //--------------------------
+            //FavoriteRouteScreen
+            //-----------------------------
+            composable(Routes.FAVORITE_ROUTES) {
+
+                FavoriteRouteScreen(
+
+                    sessionManager = sessionManager
+
                 )
             }
         }

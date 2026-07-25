@@ -249,6 +249,26 @@ fun ProfileScreen(
                         30.dp
                     )
             )
+            Button(
+
+                onClick = {
+
+                    navController.navigate(
+                        Routes.FAVORITE_ROUTES
+                    )
+                },
+
+                modifier =
+                    Modifier.fillMaxWidth()
+
+            ) {
+
+                Text("Favourite Routes")
+            }
+            Spacer(
+                modifier =
+                    Modifier.height(8.dp)
+            )
 
             Button(
 
