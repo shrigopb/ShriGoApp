@@ -20,8 +20,8 @@ android {
         applicationId = "in.shrigo.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 21
-        versionName = "20.3.1"
+        versionCode = 23
+        versionName = "20.3.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
