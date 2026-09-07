@@ -18,15 +18,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import `in`.shrigo.app.utils.SessionManager
+
 
 @Composable
 fun FavoriteRouteScreen(
-
+    navController: NavController,
     sessionManager: SessionManager,
-
     viewModel: FavoriteRouteViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
-
 ) {
 
     val favorites by viewModel.favorites.collectAsState()
@@ -91,7 +91,9 @@ fun FavoriteRouteScreen(
                         favorite = favorite,
 
                         onUpload = {
-
+                            navController.navigate(
+                                "upload_ride_favorite/${favorite.id}"
+                            )
                         },
 
                         onEdit = {

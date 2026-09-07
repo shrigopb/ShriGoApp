@@ -29,7 +29,7 @@ fun UploadRideScreen(
 
     navController:
     NavController,
-
+    favoriteId: Int? = null,
     viewModel:
     UploadRideViewModel =
         viewModel()
@@ -100,6 +100,20 @@ fun UploadRideScreen(
 
     var ridePrice by remember {
         mutableStateOf("")
+    }
+
+    LaunchedEffect(favoriteId) {
+        favoriteId?.let { id ->
+            viewModel.loadFavorite(id) { favorite ->
+
+                rideSource = favorite.rideFrom
+                rideVia = favorite.rideVia
+                rideDesti = favorite.rideTo
+                rideTime = favorite.rideTime
+                ridePrice = favorite.ridePrice.toString()
+                rideSeats = favorite.rideSeats.toString()
+            }
+        }
     }
 
     var driverName by remember {
