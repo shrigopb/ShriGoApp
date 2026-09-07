@@ -248,6 +248,11 @@ interface ApiService {
         @Path("driverUniqueId") driverUniqueId: String
     ): Response<List<FavoriteRoute>>
 
+    @GET("api/FavoriteRouteApi/GetFavoriteById/{id}")
+    suspend fun getFavoriteById(
+        @Path("id") id: Int
+    ): FavoriteRoute
+
     @DELETE("api/FavoriteRouteApi/DeleteFavorite/{id}")
     suspend fun deleteFavorite(
         @Path("id") id: Int

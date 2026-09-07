@@ -411,9 +411,22 @@ fun AppNavHost() {
             composable(Routes.FAVORITE_ROUTES) {
 
                 FavoriteRouteScreen(
-
+                    navController = navController,
                     sessionManager = sessionManager
 
+            )
+         }
+
+            composable(
+                route = Routes.UPLOAD_RIDE_FAVORITE
+            ) { backStackEntry ->
+
+                val favoriteId =
+                    backStackEntry.arguments?.getString("favoriteId")?.toIntOrNull()
+
+                UploadRideScreen(
+                    navController = navController,
+                    favoriteId = favoriteId
                 )
             }
         }

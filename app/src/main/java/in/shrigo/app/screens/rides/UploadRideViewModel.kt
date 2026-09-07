@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import `in`.shrigo.app.api.RetrofitClient
+import `in`.shrigo.app.models.FavoriteRoute
 import `in`.shrigo.app.models.PlaceSuggestion
 import `in`.shrigo.app.models.SaveFavoriteRequest
 import `in`.shrigo.app.models.SignupRequest
@@ -390,6 +391,20 @@ class UploadRideViewModel(
 
             _isLoading.value =
                 false
+        }
+    }
+
+    //-------------------------
+    //
+    //----------------------------
+    fun loadFavorite(id: Int, onLoaded: (FavoriteRoute) -> Unit) {
+        viewModelScope.launch {
+            try {
+                val favorite = favoriteRouteRepository.getFavoriteById(id)
+                onLoaded(favorite)
+            } catch (e: Exception) {
+                _error.value = e.message ?: "Failed to load favorite route"
+            }
         }
     }
 }

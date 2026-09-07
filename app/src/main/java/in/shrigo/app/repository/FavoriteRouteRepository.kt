@@ -7,24 +7,18 @@ import `in`.shrigo.app.models.SaveFavoriteRequest
 
 class FavoriteRouteRepository {
 
-    suspend fun saveFavorite(
-        request: SaveFavoriteRequest
-    ) =
+    suspend fun saveFavorite(request: SaveFavoriteRequest) =
         RetrofitClient.api.saveFavorite(request)
 
-    suspend fun getFavorites(
-        driverUniqueId: String
-    ) =
+    suspend fun getFavorites(driverUniqueId: String) =
         RetrofitClient.api.getFavorites(driverUniqueId)
 
-    suspend fun deleteFavorite(
-        id: Int
-    ) =
+    suspend fun getFavoriteById(id: Int) =
+        RetrofitClient.api.getFavoriteById(id)
+
+    suspend fun deleteFavorite(id: Int) =
         RetrofitClient.api.deleteFavorite(id)
 
-    suspend fun updateFavorite(
-        id: Int,
-        request: FavoriteRoute
-    ) =
+    suspend fun updateFavorite(id: Int,request: FavoriteRoute) =
         RetrofitClient.api.updateFavorite(id, request)
 }

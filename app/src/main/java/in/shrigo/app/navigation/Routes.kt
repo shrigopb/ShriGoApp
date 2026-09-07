@@ -21,6 +21,9 @@ object Routes {
     const val UPLOAD_RIDE =
         "upload_ride"
 
+    const val UPLOAD_RIDE_FAVORITE =
+        "upload_ride_favorite/{favoriteId}"
+
     const val EDIT_RIDE =
         "edit_ride"
 
